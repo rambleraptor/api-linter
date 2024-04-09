@@ -1,4 +1,4 @@
-package aip0164
+package aep0164
 
 import (
 	"github.com/googleapis/api-linter/lint"

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package aip0133 contains rules defined in https://aip.dev/133.
-package aip0133
+// Package aep0133 contains rules defined in https://aep.dev/133.
+package aep0133
 
 import (
 	"strings"

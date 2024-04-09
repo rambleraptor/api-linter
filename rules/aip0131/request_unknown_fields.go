@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package aip0131
+package aep0131
 
 import (
 	"fmt"
@@ -41,7 +41,7 @@ var unknownFields = &lint.FieldRule{
 		if !allowedFields.Contains(field.GetName()) {
 			return []lint.Problem{{
 				Message: fmt.Sprintf(
-					"Unexpected field: Get RPCs must only contain fields explicitly described in https://aip.dev/131, not %q.",
+					"Unexpected field: Get RPCs must only contain fields explicitly described in https://aep.dev/131, not %q.",
 					string(field.GetName()),
 				),
 				Descriptor: field,

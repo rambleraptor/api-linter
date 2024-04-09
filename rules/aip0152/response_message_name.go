@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package aip0152
+package aep0152
 
 import (
 	"fmt"

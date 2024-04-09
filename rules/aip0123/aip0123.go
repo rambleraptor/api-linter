@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package aip0123 contains rules defined in https://aip.dev/123.
-package aip0123
+// Package aep0123 contains rules defined in https://aep.dev/123.
+package aep0123
 
 import (
 	"fmt"

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package aip0165 contains rules defined in https://aip.dev/165.
-package aip0165
+// Package aep0165 contains rules defined in https://aep.dev/165.
+package aep0165
 
 import (
 	"regexp"

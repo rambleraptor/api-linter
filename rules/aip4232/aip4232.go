@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package aip4232 contains rules defined in https://aip.dev/4232.
-package aip4232
+// Package aep4232 contains rules defined in https://aep.dev/4232.
+package aep4232
 
 import (
 	"github.com/googleapis/api-linter/lint"

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package aip0121 contains rules defined in https://aip.dev/121.
-package aip0121
+// Package aep0121 contains rules defined in https://aep.dev/121.
+package aep0121
 
 import (
 	"github.com/googleapis/api-linter/lint"

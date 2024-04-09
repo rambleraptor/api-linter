@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package aip0136 contains rules defined in https://aip.dev/136.
-package aip0136
+// Package aep0136 contains rules defined in https://aep.dev/136.
+package aep0136
 
 import (
 	"strings"
@@ -35,7 +35,7 @@ func AddRules(r lint.RuleRegistry) error {
 		uriSuffix,
 		verbNoun,
 		// These rules are disabled as they have no matching AIP guidance.
-		// See https://github.com/aip-dev/google.aip.dev/issues/955 for details.
+		// See https://github.com/aep-dev/google.aep.dev/issues/955 for details.
 		// httpNameVariable,
 		// httpParentVariable,
 	)
