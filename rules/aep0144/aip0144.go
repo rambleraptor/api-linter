@@ -23,7 +23,7 @@ import (
 )
 
 // AddRules accepts a register function and registers each of
-// this AIP's rules to it.
+// this AEP's rules to it.
 func AddRules(r lint.RuleRegistry) error {
 	return r.Register(
 		144,
@@ -35,7 +35,7 @@ func AddRules(r lint.RuleRegistry) error {
 
 var addRemoveMethodRegexp = regexp.MustCompile("^(?:Add|Remove)(?:[A-Z]|$)")
 
-// Returns true if this is an AIP-144 Add/Remove method, false otherwise.
+// Returns true if this is an AEP-144 Add/Remove method, false otherwise.
 func isAddRemoveMethod(m *desc.MethodDescriptor) bool {
 	return addRemoveMethodRegexp.MatchString(m.GetName())
 }

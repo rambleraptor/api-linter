@@ -23,7 +23,7 @@ import (
 )
 
 // AddRules accepts a register function and registers each of
-// this AIP's rules to it.
+// this AEP's rules to it.
 func AddRules(r lint.RuleRegistry) error {
 	return r.Register(
 		152,
@@ -45,12 +45,12 @@ var (
 	runURIRegexp        = regexp.MustCompile(`:run$`)
 )
 
-// Returns true if this is an AIP-152 Run method, false otherwise.
+// Returns true if this is an AEP-152 Run method, false otherwise.
 func isRunMethod(m *desc.MethodDescriptor) bool {
 	return runMethodRegexp.MatchString(m.GetName())
 }
 
-// Returns true if this is an AIP-152 Run request message, false otherwise.
+// Returns true if this is an AEP-152 Run request message, false otherwise.
 func isRunRequestMessage(m *desc.MessageDescriptor) bool {
 	return runReqMessageRegexp.MatchString(m.GetName())
 }

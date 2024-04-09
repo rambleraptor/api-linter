@@ -21,7 +21,7 @@ import (
 	"github.com/jhump/protoreflect/desc"
 )
 
-// AddRules adds all of the AIP-151 rules to the provided registry.
+// AddRules adds all of the AEP-151 rules to the provided registry.
 func AddRules(r lint.RuleRegistry) error {
 	return r.Register(
 		151,

@@ -22,7 +22,7 @@ import (
 	"github.com/jhump/protoreflect/desc"
 )
 
-// AddRules adds all of the AIP-164 rules to the provided registry.
+// AddRules adds all of the AEP-164 rules to the provided registry.
 func AddRules(r lint.RuleRegistry) error {
 	return r.Register(
 		164,
@@ -46,12 +46,12 @@ var (
 	undeleteURINameRegexp    = regexp.MustCompile(`{name=[a-zA-Z/*]+}:undelete$`)
 )
 
-// Returns true if this is a AIP-164 Undelete method, false otherwise.
+// Returns true if this is a AEP-164 Undelete method, false otherwise.
 func isUndeleteMethod(m *desc.MethodDescriptor) bool {
 	return undeleteMethodRegexp.MatchString(m.GetName())
 }
 
-// Returns true if this is an AIP-164 Undelete request message, false otherwise.
+// Returns true if this is an AEP-164 Undelete request message, false otherwise.
 func isUndeleteRequestMessage(m *desc.MessageDescriptor) bool {
 	return undeleteReqMessageRegexp.MatchString(m.GetName())
 }
