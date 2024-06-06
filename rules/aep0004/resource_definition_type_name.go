@@ -1,4 +1,4 @@
-// Copyright 2021 Google LLC
+// Copyright 2022 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,30 +15,31 @@
 package aep0004
 
 import (
+	"strings"
+
 	"github.com/googleapis/api-linter/lint"
 	"github.com/googleapis/api-linter/locations"
 	"github.com/googleapis/api-linter/rules/internal/utils"
 	"github.com/jhump/protoreflect/desc"
 )
 
-var resourceReferenceType = &lint.FieldRule{
-	Name: lint.NewRuleName(123, "resource-reference-type"),
+var resourceDefinitionTypeName = &lint.FileRule{
+	Name:   lint.NewRuleName(4, "resource-definition-type-name"),
 	RuleType: lint.NewRuleType(lint.MustRule),
-	OnlyIf: func(f *desc.FieldDescriptor) bool {
-		return utils.GetResourceReference(f) != nil
-	},
-	LintField: func(f *desc.FieldDescriptor) []lint.Problem {
-		if utils.GetTypeName(f) != "string" {
-			// We assume that the likely mistake is probably that the annotation
-			// is wrong (and should not be there), and not that the type is wrong,
-			// because this is what we have observed in real life.
-			return []lint.Problem{{
-				Message:    "Resource references should only be applied to strings.",
-				Descriptor: f,
-				Location:   locations.FieldResourceReference(f),
-				Suggestion: "",
-			}}
+	OnlyIf: hasResourceDefinitionAnnotation,
+	LintFile: func(f *desc.FileDescriptor) []lint.Problem {
+		var problems []lint.Problem
+		resources := utils.GetResourceDefinitions(f)
+		for ndx, resource := range resources {
+			if strings.Count(resource.GetType(), "/") != 1 {
+				problems = append(problems, lint.Problem{
+					Message:    "Resource type names must be of the form {Service Name}/{Type}.",
+					Descriptor: f,
+					Location:   locations.FileResourceDefinition(f, ndx),
+				})
+			}
 		}
-		return nil
+
+		return problems
 	},
 }

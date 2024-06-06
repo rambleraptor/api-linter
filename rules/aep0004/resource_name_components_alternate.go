@@ -28,7 +28,7 @@ import (
 var identifierRegexp = regexp.MustCompile("^{[a-z][_a-z0-9]*[a-z0-9]}$")
 
 var resourceNameComponentsAlternate = &lint.MessageRule{
-	Name:   lint.NewRuleName(123, "resource-name-components-alternate"),
+	Name:   lint.NewRuleName(4, "resource-name-components-alternate"),
 	RuleType: lint.NewRuleType(lint.MustRule),
 	OnlyIf: utils.IsResource,
 	LintMessage: func(m *desc.MessageDescriptor) []lint.Problem {

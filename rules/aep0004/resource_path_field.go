@@ -1,4 +1,4 @@
-// Copyright 2022 Google LLC
+// Copyright 2021 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,24 +16,20 @@ package aep0004
 
 import (
 	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/locations"
 	"github.com/googleapis/api-linter/rules/internal/utils"
 	"github.com/jhump/protoreflect/desc"
 )
 
-var resourceDefinitionVariables = &lint.FileRule{
-	Name:   lint.NewRuleName(123, "resource-definition-variables"),
+var resourcePathField = &lint.MessageRule{
+	Name:   lint.NewRuleName(4, "resource-path-field"),
+	OnlyIf: utils.IsResource,
 	RuleType: lint.NewRuleType(lint.MustRule),
-	OnlyIf: hasResourceDefinitionAnnotation,
-	LintFile: func(f *desc.FileDescriptor) []lint.Problem {
-		var problems []lint.Problem
-		resources := utils.GetResourceDefinitions(f)
-
-		for ndx, resource := range resources {
-			loc := locations.FileResourceDefinition(f, ndx)
-			p := lintResourceVariables(resource, f, loc)
-			problems = append(problems, p...)
+	LintMessage: func(m *desc.MessageDescriptor) []lint.Problem {
+		f := "path"
+		if nf := utils.GetResource(m).GetNameField(); nf != "" {
+			f = nf
 		}
-		return problems
+
+		return utils.LintFieldPresentAndSingularString(f)(m)
 	},
 }

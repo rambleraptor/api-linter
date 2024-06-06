@@ -1,4 +1,4 @@
-// Copyright 2022 Google LLC
+// Copyright 2021 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,32 +21,24 @@ import (
 	"github.com/jhump/protoreflect/desc"
 )
 
-var pathNeverOptional = &lint.MessageRule{
-	Name: lint.NewRuleName(123, "path-never-optional"),
+var resourceReferenceType = &lint.FieldRule{
+	Name: lint.NewRuleName(4, "resource-reference-type"),
 	RuleType: lint.NewRuleType(lint.MustRule),
-	OnlyIf: func(m *desc.MessageDescriptor) bool {
-		f := "path"
-		if nf := utils.GetResource(m).GetNameField(); nf != "" {
-			f = nf
-		}
-		return utils.IsResource(m) && m.FindFieldByName(f) != nil
+	OnlyIf: func(f *desc.FieldDescriptor) bool {
+		return utils.GetResourceReference(f) != nil
 	},
-	LintMessage: func(m *desc.MessageDescriptor) []lint.Problem {
-		f := "path"
-		if nf := utils.GetResource(m).GetNameField(); nf != "" {
-			f = nf
-		}
-		field := m.FindFieldByName(f)
-
-		if field.IsProto3Optional() {
+	LintField: func(f *desc.FieldDescriptor) []lint.Problem {
+		if utils.GetTypeName(f) != "string" {
+			// We assume that the likely mistake is probably that the annotation
+			// is wrong (and should not be there), and not that the type is wrong,
+			// because this is what we have observed in real life.
 			return []lint.Problem{{
-				Message:    "Resource path fields must never be labeled with proto3_optional",
-				Descriptor: field,
-				Location:   locations.FieldLabel(field),
+				Message:    "Resource references should only be applied to strings.",
+				Descriptor: f,
+				Location:   locations.FieldResourceReference(f),
 				Suggestion: "",
 			}}
 		}
-
 		return nil
 	},
 }

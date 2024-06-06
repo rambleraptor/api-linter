@@ -27,7 +27,7 @@ import (
 )
 
 var resourcePattern = &lint.MessageRule{
-	Name:   lint.NewRuleName(123, "resource-pattern"),
+	Name:   lint.NewRuleName(4, "resource-pattern"),
 	OnlyIf: hasResourceAnnotation,
 	RuleType: lint.NewRuleType(lint.MustRule),
 	LintMessage: func(m *desc.MessageDescriptor) []lint.Problem {

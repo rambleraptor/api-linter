@@ -23,26 +23,28 @@ import (
 	"github.com/jhump/protoreflect/desc"
 )
 
-var resourcePlural = &lint.MessageRule{
-	Name:   lint.NewRuleName(123, "resource-plural"),
+var resourceSingular = &lint.MessageRule{
+	Name:   lint.NewRuleName(4, "resource-singular"),
 	OnlyIf: hasResourceAnnotation,
 	RuleType: lint.NewRuleType(lint.MustRule),
 	LintMessage: func(m *desc.MessageDescriptor) []lint.Problem {
 		r := utils.GetResource(m)
 		l := locations.MessageResource(m)
-		p := r.GetPlural()
-		pLower := utils.ToLowerCamelCase(p)
-		if p == "" {
+		s := r.GetSingular()
+		_, typeName, ok := utils.SplitResourceTypeName(r.GetType())
+		lowerTypeName := utils.ToLowerCamelCase(typeName)
+		if s == "" {
 			return []lint.Problem{{
-				Message:    "Resources should declare plural.",
+				Message:    fmt.Sprintf("Resources should declare singular: %q", lowerTypeName),
 				Descriptor: m,
 				Location:   l,
 			}}
 		}
-		if pLower != p {
+		if !ok || lowerTypeName != s {
 			return []lint.Problem{{
 				Message: fmt.Sprintf(
-					"Resource plural should be lowerCamelCase: %q", pLower,
+					"Resource singular should be lower camel case of type: %q",
+					lowerTypeName,
 				),
 				Descriptor: m,
 				Location:   l,

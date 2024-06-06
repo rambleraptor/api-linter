@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2022 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,21 +16,24 @@ package aep0004
 
 import (
 	"github.com/googleapis/api-linter/lint"
+	"github.com/googleapis/api-linter/locations"
 	"github.com/googleapis/api-linter/rules/internal/utils"
 	"github.com/jhump/protoreflect/desc"
 )
 
-var resourceAnnotation = &lint.MessageRule{
-	Name:   lint.NewRuleName(123, "resource-annotation"),
+var resourceDefinitionVariables = &lint.FileRule{
+	Name:   lint.NewRuleName(4, "resource-definition-variables"),
 	RuleType: lint.NewRuleType(lint.MustRule),
-	OnlyIf: isResourceMessage,
-	LintMessage: func(m *desc.MessageDescriptor) []lint.Problem {
-		if utils.GetResource(m) == nil {
-			return []lint.Problem{{
-				Message:    "Resource messages should include a `google.api.resource` annotation.",
-				Descriptor: m,
-			}}
+	OnlyIf: hasResourceDefinitionAnnotation,
+	LintFile: func(f *desc.FileDescriptor) []lint.Problem {
+		var problems []lint.Problem
+		resources := utils.GetResourceDefinitions(f)
+
+		for ndx, resource := range resources {
+			loc := locations.FileResourceDefinition(f, ndx)
+			p := lintResourceVariables(resource, f, loc)
+			problems = append(problems, p...)
 		}
-		return nil
+		return problems
 	},
 }

@@ -86,7 +86,7 @@ func allDeps(f *desc.FileDescriptor, deps map[string]*desc.FileDescriptor) map[s
 }
 
 var duplicateResource = &lint.FileRule{
-	Name: lint.NewRuleName(123, "duplicate-resource"),
+	Name: lint.NewRuleName(4, "duplicate-resource"),
 	RuleType: lint.NewRuleType(lint.MustRule),
 	LintFile: func(f *desc.FileDescriptor) []lint.Problem {
 		defsInFile := resourceDefsInFile(f, map[string][]resourceDef{})

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package aep0004 contains rules defined in https://aep.dev/123.
+// Package aep0004 contains rules defined in https://aep.dev/4.
 package aep0004
 
 import (
@@ -30,7 +30,7 @@ import (
 // this AEP's rules to it.
 func AddRules(r lint.RuleRegistry) error {
 	return r.Register(
-		123,
+		4,
 		duplicateResource,
 		resourceAnnotation,
 		resourceNameComponentsAlternate,

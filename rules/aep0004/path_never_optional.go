@@ -21,19 +21,32 @@ import (
 	"github.com/jhump/protoreflect/desc"
 )
 
-var resourceDefinitionPatterns = &lint.FileRule{
-	Name:   lint.NewRuleName(123, "resource-definition-pattern"),
+var pathNeverOptional = &lint.MessageRule{
+	Name: lint.NewRuleName(4, "path-never-optional"),
 	RuleType: lint.NewRuleType(lint.MustRule),
-	OnlyIf: hasResourceDefinitionAnnotation,
-	LintFile: func(f *desc.FileDescriptor) []lint.Problem {
-		var problems []lint.Problem
-		resources := utils.GetResourceDefinitions(f)
-
-		for ndx, resource := range resources {
-			loc := locations.FileResourceDefinition(f, ndx)
-			probs := lintResourcePattern(resource, f, loc)
-			problems = append(problems, probs...)
+	OnlyIf: func(m *desc.MessageDescriptor) bool {
+		f := "path"
+		if nf := utils.GetResource(m).GetNameField(); nf != "" {
+			f = nf
 		}
-		return problems
+		return utils.IsResource(m) && m.FindFieldByName(f) != nil
+	},
+	LintMessage: func(m *desc.MessageDescriptor) []lint.Problem {
+		f := "path"
+		if nf := utils.GetResource(m).GetNameField(); nf != "" {
+			f = nf
+		}
+		field := m.FindFieldByName(f)
+
+		if field.IsProto3Optional() {
+			return []lint.Problem{{
+				Message:    "Resource path fields must never be labeled with proto3_optional",
+				Descriptor: field,
+				Location:   locations.FieldLabel(field),
+				Suggestion: "",
+			}}
+		}
+
+		return nil
 	},
 }
