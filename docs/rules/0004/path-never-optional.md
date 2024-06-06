@@ -1,23 +1,23 @@
 ---
 rule:
   aep: 4
-  name: [core, '4', name-never-optional]
-  summary: Resource name fields must never be labeled with proto3_optional.
-permalink: /4/name-never-optional
+  name: [core, '4', path-never-optional]
+  summary: Resource path fields must never be labeled with proto3_optional.
+permalink: /4/path-never-optional
 redirect_from:
-  - /4/name-never-optional
+  - /4/path-never-optional
 ---
 
-# Resource name field never optional
+# Resource path field never optional
 
-This rule enforces that the name field of a resource message is not labeled with
+This rule enforces that the path field of a resource message is not labeled with
 proto3_optional.
 
 ## Details
 
 This rule scans for messages with a `google.api.resource` annotation and ensures
-that the configured name field (either `name` or whichever field specified via
-`name_field`) is not labeled as `optional`.
+that the configured path field (either `path` or whichever field specified via
+`path_field`) is not labeled as `optional`.
 
 ## Examples
 
@@ -31,7 +31,7 @@ message Book {
     pattern: "publishers/{publisher}/books/{book}"
   };
 
-  // The name field should not be labeled as optional.
+  // The path field should not be labeled as optional.
   optional string path = 1;
 }
 ```
@@ -55,7 +55,7 @@ message Book {
 If you need to violate this rule, use a leading comment above the message.
 
 ```proto
-// (-- api-linter: core::04::name-never-optional=disabled
+// (-- api-linter: core::04::path-never-optional=disabled
 //     aep.dev/not-precedent: We need to do this because reasons. --)
 message Book {
   option (google.api.resource) = {

@@ -1,14 +1,14 @@
 ---
 rule:
   aep: 4
-  name: [core, '4', resource-name-field]
+  name: [core, '4', resource-path-field]
   summary: Resource messages should have a `string path` field.
-permalink: /4/resource-name-field
+permalink: /4/resource-path-field
 redirect_from:
-  - /4/resource-name-field
+  - /4/resource-path-field
 ---
 
-# Resource `name` field
+# Resource `path` field
 
 This rule enforces that messages that appear to represent resources have a
 `string path` field, as described in [AEP-4][].
@@ -16,7 +16,7 @@ This rule enforces that messages that appear to represent resources have a
 ## Details
 
 This rule scans all messages that have a `google.api.resource` annotation, and
-complains if the `name` field is missing or if it is any type other than
+complains if the `path` field is missing or if it is any type other than
 singular `string`.
 
 ## Examples
@@ -42,7 +42,7 @@ message Book {
   };
 
   // Should be `string`, not `bytes`.
-  bytes name = 1;
+  bytes path = 1;
 }
 ```
 
@@ -66,7 +66,7 @@ If you need to violate this rule, use a leading comment above the message, or
 above the field if it is the wrong type.
 
 ```proto
-// (-- api-linter: core::4::resource-name-field=disabled
+// (-- api-linter: core::4::resource-path-field=disabled
 //     aep.dev/not-precedent: We need to do this because reasons. --)
 message Book {
   option (google.api.resource) = {
