@@ -151,6 +151,7 @@ git commit --allow-empty -m 'fix: new patch release'
 ```
 
 ## Migrating rules
+
 Rules in this linter need to be ported from the AIP standard to the AEP standard.
 
 When making a conversion PR, the following steps should be taken:
