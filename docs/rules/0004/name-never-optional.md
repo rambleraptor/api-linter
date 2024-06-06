@@ -32,7 +32,7 @@ message Book {
   };
 
   // The name field should not be labeled as optional.
-  optional string name = 1;
+  optional string path = 1;
 }
 ```
 
@@ -46,7 +46,7 @@ message Book {
     pattern: "publishers/{publisher}/books/{book}"
   };
 
-  string name = 1;
+  string path = 1;
 }
 ```
 
@@ -63,7 +63,7 @@ message Book {
     pattern: "publishers/{publisher}/books/{book}"
   };
 
-  optional string name = 1;
+  optional string path = 1;
 }
 ```
 

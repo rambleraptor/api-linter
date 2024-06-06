@@ -32,7 +32,7 @@ message Book {
     singular: "shelf",
   };
 
-  string name = 1;
+  string path = 1;
 }
 ```
 
@@ -47,7 +47,7 @@ message Book {
     singular: "bookShelf",
   };
 
-  string name = 1;
+  string path = 1;
 }
 ```
 
@@ -65,7 +65,7 @@ message Book {
     singular: "shelf",
   };
 
-  string name = 1;
+  string path = 1;
 }
 ```
 

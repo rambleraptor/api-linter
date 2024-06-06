@@ -31,7 +31,7 @@ message Book {
     pattern: "publishers/{publisher_id}/books/{book_id}"
   };
 
-  string name = 1;
+  string path = 1;
 }
 ```
 
@@ -44,7 +44,7 @@ message ElectronicBook {
     pattern: "publishers/{publisher}/electronicBooks/{electronicBook}"
   };
 
-  string name = 1;
+  string path = 1;
 }
 ```
 
@@ -58,7 +58,7 @@ message Book {
     pattern: "publishers/{publisher}/books/{book}"
   };
 
-  string name = 1;
+  string path = 1;
 }
 ```
 
@@ -70,7 +70,7 @@ message ElectronicBook {
     pattern: "publishers/{publisher}/electronicBooks/{electronic_book}"
   };
 
-  string name = 1;
+  string path = 1;
 }
 ```
 
@@ -87,7 +87,7 @@ message Book {
     pattern: "publishers/{publisher_id}/books/{book_id}"
   };
 
-  string name = 1;
+  string path = 1;
 }
 ```
 

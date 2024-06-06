@@ -32,7 +32,7 @@ message Book {
     // pattern should be here
   };
 
-  string name = 1;
+  string path = 1;
 }
 ```
 
@@ -45,7 +45,7 @@ message ElectronicBook {
     pattern: "publishers/{publisher}/electronic_books/{electronic_book}"
   };
 
-  string name = 1;
+  string path = 1;
 }
 ```
 
@@ -59,7 +59,7 @@ message Book {
     pattern: "publishers/{publisher}/books/{book}"
   };
 
-  string name = 1;
+  string path = 1;
 }
 ```
 
@@ -71,7 +71,7 @@ message ElectronicBook {
     pattern: "publishers/{publisher}/electronicBooks/{electronic_book}"
   };
 
-  string name = 1;
+  string path = 1;
 }
 ```
 
@@ -87,7 +87,7 @@ message Book {
     type: "library.googleapis.com/Book"
   };
 
-  string name = 1;
+  string path = 1;
 }
 ```
 

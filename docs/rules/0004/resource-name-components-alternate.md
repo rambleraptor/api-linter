@@ -33,7 +33,7 @@ message Book {
     // two collections next to each other.
     pattern: "publishers/books/{book}"
   };
-  string name = 1;
+  string path = 1;
 }
 ```
 
@@ -46,7 +46,7 @@ message Book {
     type: "library.googleapis.com/Book"
     pattern: "publishers/{publisher}/books/{book}"
   };
-  string name = 1;
+  string path = 1;
 }
 ```
 
@@ -62,7 +62,7 @@ message Book {
     type: "library.googleapis.com/Book"
     pattern: "publishers/books/{book}"
   };
-  string name = 1;
+  string path = 1;
 }
 ```
 

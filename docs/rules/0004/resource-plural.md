@@ -31,7 +31,7 @@ message Book {
     pattern: "publishers/{publisher}/bookShelves/{book_shelf}"
   };
 
-  string name = 1;
+  string path = 1;
 }
 ```
 
@@ -46,7 +46,7 @@ message Book {
     plural: "bookShelves",
   };
 
-  string name = 1;
+  string path = 1;
 }
 ```
 
@@ -63,7 +63,7 @@ message Book {
     pattern: "publishers/{publisher}/books/{book}"
   };
 
-  string name = 1;
+  string path = 1;
 }
 ```
 

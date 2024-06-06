@@ -2,7 +2,7 @@
 rule:
   aep: 4
   name: [core, '4', resource-name-field]
-  summary: Resource messages should have a `string name` field.
+  summary: Resource messages should have a `string path` field.
 permalink: /4/resource-name-field
 redirect_from:
   - /4/resource-name-field
@@ -11,7 +11,7 @@ redirect_from:
 # Resource `name` field
 
 This rule enforces that messages that appear to represent resources have a
-`string name` field, as described in [AEP-4][].
+`string path` field, as described in [AEP-4][].
 
 ## Details
 
@@ -24,7 +24,7 @@ singular `string`.
 **Incorrect** code for this rule:
 
 ```proto
-// Incorrect: missing `string name` field.
+// Incorrect: missing `string path` field.
 message Book {
   option (google.api.resource) = {
     type: "library.googleapis.com/Book"
@@ -56,7 +56,7 @@ message Book {
     pattern: "publishers/{publisher}/books/{book}"
   };
 
-  string name = 1;
+  string path = 1;
 }
 ```
 

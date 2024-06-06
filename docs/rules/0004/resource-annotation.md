@@ -16,7 +16,7 @@ have a `google.api.resource` annotation, as described in [AEP-4][].
 ## Details
 
 This rule scans all top-level messages, and assumes that messages with a
- `string name` field are resources unless the message name ends with `Request`.
+ `string path` field are resources unless the message name ends with `Request`.
 For messages that are resources, it complains if the `google.api.resource`
 annotation is missing.
 
@@ -28,7 +28,7 @@ annotation is missing.
 // Incorrect.
 message Book {
   // A `google.api.resource` annotation should be here.
-  string name = 1;
+  string path = 1;
 }
 ```
 
@@ -42,7 +42,7 @@ message Book {
     pattern: "publishers/{publisher}/books/{book}"
   };
 
-  string name = 1;
+  string path = 1;
 }
 ```
 
@@ -54,7 +54,7 @@ If you need to violate this rule, use a leading comment above the message.
 // (-- api-linter: core::4::resource-annotation=disabled
 //     aep.dev/not-precedent: We need to do this because reasons. --)
 message Book {
-  string name = 1;
+  string path = 1;
 }
 ```
 

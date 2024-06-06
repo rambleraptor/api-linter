@@ -30,7 +30,7 @@ in error rather than the selected type.
 ```proto
 // Incorrect.
 message Book {
-  string name = 1;
+  string path = 1;
 
   // This is not a resource reference; the annotation does not belong.
   Author author = 2 [(google.api.resource_reference) = {
@@ -44,7 +44,7 @@ message Book {
 ```proto
 // Correct.
 message Book {
-  string name = 1;
+  string path = 1;
 
   Author author = 2;
 }
@@ -53,7 +53,7 @@ message Book {
 ```proto
 // Correct.
 message Book {
-  string name = 1;
+  string path = 1;
 
   string author = 2 [(google.api.resource_reference) = {
     type: "library.googleapis.com/Author"

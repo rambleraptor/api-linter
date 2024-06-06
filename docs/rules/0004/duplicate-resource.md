@@ -31,7 +31,7 @@ message Book {
     pattern: "publishers/{publisher}/books/{book}"
   };
 
-  string name = 1;
+  string path = 1;
 }
 
 message Author {
@@ -41,7 +41,7 @@ message Author {
     pattern: "authors/{author}"
   };
 
-  string name = 1;
+  string path = 1;
 }
 ```
 
@@ -55,7 +55,7 @@ message Book {
     pattern: "publishers/{publisher}/books/{book}"
   };
 
-  string name = 1;
+  string path = 1;
 }
 
 message Author {
@@ -64,7 +64,7 @@ message Author {
     pattern: "authors/{author}"
   };
 
-  string name = 1;
+  string path = 1;
 }
 ```
 
@@ -84,7 +84,7 @@ message Book {
     pattern: "publishers/{publisher}/books/{book}"
   };
 
-  string name = 1;
+  string path = 1;
 }
 
 message Author {
@@ -93,7 +93,7 @@ message Author {
     pattern: "authors/{author}"
   };
 
-  string name = 1;
+  string path = 1;
 }
 ```
 
