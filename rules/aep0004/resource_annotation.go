@@ -22,6 +22,7 @@ import (
 
 var resourceAnnotation = &lint.MessageRule{
 	Name:   lint.NewRuleName(123, "resource-annotation"),
+	RuleType: lint.NewRuleType(lint.MustRule),
 	OnlyIf: isResourceMessage,
 	LintMessage: func(m *desc.MessageDescriptor) []lint.Problem {
 		if utils.GetResource(m) == nil {

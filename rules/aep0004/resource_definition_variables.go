@@ -23,6 +23,7 @@ import (
 
 var resourceDefinitionVariables = &lint.FileRule{
 	Name:   lint.NewRuleName(123, "resource-definition-variables"),
+	RuleType: lint.NewRuleType(lint.MustRule),
 	OnlyIf: hasResourceDefinitionAnnotation,
 	LintFile: func(f *desc.FileDescriptor) []lint.Problem {
 		var problems []lint.Problem

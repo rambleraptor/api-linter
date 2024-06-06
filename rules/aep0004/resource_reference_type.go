@@ -23,6 +23,7 @@ import (
 
 var resourceReferenceType = &lint.FieldRule{
 	Name: lint.NewRuleName(123, "resource-reference-type"),
+	RuleType: lint.NewRuleType(lint.MustRule),
 	OnlyIf: func(f *desc.FieldDescriptor) bool {
 		return utils.GetResourceReference(f) != nil
 	},

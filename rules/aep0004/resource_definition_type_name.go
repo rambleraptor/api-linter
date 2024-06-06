@@ -25,6 +25,7 @@ import (
 
 var resourceDefinitionTypeName = &lint.FileRule{
 	Name:   lint.NewRuleName(123, "resource-definition-type-name"),
+	RuleType: lint.NewRuleType(lint.MustRule),
 	OnlyIf: hasResourceDefinitionAnnotation,
 	LintFile: func(f *desc.FileDescriptor) []lint.Problem {
 		var problems []lint.Problem

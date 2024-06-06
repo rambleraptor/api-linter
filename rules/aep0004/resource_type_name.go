@@ -25,6 +25,7 @@ import (
 
 var resourceTypeName = &lint.MessageRule{
 	Name: lint.NewRuleName(123, "resource-type-name"),
+	RuleType: lint.NewRuleType(lint.MustRule),
 	OnlyIf: func(m *desc.MessageDescriptor) bool {
 		return utils.GetResource(m) != nil
 	},

@@ -1,4 +1,4 @@
-// Copyright 2022 Google LLC
+// Copyright 2021 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,36 +16,20 @@ package aep0004
 
 import (
 	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/locations"
 	"github.com/googleapis/api-linter/rules/internal/utils"
 	"github.com/jhump/protoreflect/desc"
 )
 
-var nameNeverOptional = &lint.MessageRule{
-	Name: lint.NewRuleName(123, "name-never-optional"),
-	OnlyIf: func(m *desc.MessageDescriptor) bool {
-		f := "name"
-		if nf := utils.GetResource(m).GetNameField(); nf != "" {
-			f = nf
-		}
-		return utils.IsResource(m) && m.FindFieldByName(f) != nil
-	},
+var resourcePathField = &lint.MessageRule{
+	Name:   lint.NewRuleName(123, "resource-path-field"),
+	OnlyIf: utils.IsResource,
+	RuleType: lint.NewRuleType(lint.MustRule),
 	LintMessage: func(m *desc.MessageDescriptor) []lint.Problem {
-		f := "name"
+		f := "path"
 		if nf := utils.GetResource(m).GetNameField(); nf != "" {
 			f = nf
 		}
-		field := m.FindFieldByName(f)
 
-		if field.IsProto3Optional() {
-			return []lint.Problem{{
-				Message:    "Resource name fields must never be labeled with proto3_optional",
-				Descriptor: field,
-				Location:   locations.FieldLabel(field),
-				Suggestion: "",
-			}}
-		}
-
-		return nil
+		return utils.LintFieldPresentAndSingularString(f)(m)
 	},
 }

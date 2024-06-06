@@ -29,12 +29,12 @@ func TestResourceNameField(t *testing.T) {
 		Field    string
 		problems testutils.Problems
 	}{
-		{"ValidBothPresent", `option (google.api.resource) = { type: "foo" };`, `string name = 1;`, nil},
-		{"InvalidNoField", `option (google.api.resource) = { type: "foo" };`, ``, testutils.Problems{{Message: "`name`"}}},
-		{"InvalidTypeNotString", `option (google.api.resource) = { type: "foo" };`, `int32 name = 1;`, testutils.Problems{{Suggestion: "string"}}},
-		{"InvalidTypeRepeated", `option (google.api.resource) = { type: "foo" };`, `repeated string name = 1;`, testutils.Problems{{Suggestion: "string"}}},
+		{"ValidBothPresent", `option (google.api.resource) = { type: "foo" };`, `string path = 1;`, nil},
+		{"InvalidNoField", `option (google.api.resource) = { type: "foo" };`, ``, testutils.Problems{{Message: "`path`"}}},
+		{"InvalidTypeNotString", `option (google.api.resource) = { type: "foo" };`, `int32 path = 1;`, testutils.Problems{{Suggestion: "string"}}},
+		{"InvalidTypeRepeated", `option (google.api.resource) = { type: "foo" };`, `repeated string path = 1;`, testutils.Problems{{Suggestion: "string"}}},
 		{"IrrelevantNoAnnotation", ``, ``, nil},
-		{"ValidNameField", `option (google.api.resource) = { type: "foo" name_field: "other_name"};`, "string other_name = 1;", nil},
+		{"ValidNameField", `option (google.api.resource) = { type: "foo" name_field: "other_path"};`, "string other_path = 1;", nil},
 	} {
 		t.Run(test.name, func(t *testing.T) {
 			f := testutils.ParseProto3Tmpl(t, `
@@ -48,7 +48,7 @@ func TestResourceNameField(t *testing.T) {
 			if strings.HasPrefix(test.name, "InvalidType") {
 				d = f.GetMessageTypes()[0].GetFields()[0]
 			}
-			if diff := test.problems.SetDescriptor(d).Diff(resourceNameField.Lint(f)); diff != "" {
+			if diff := test.problems.SetDescriptor(d).Diff(resourcePathField.Lint(f)); diff != "" {
 				t.Error(diff)
 			}
 		})

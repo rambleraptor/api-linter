@@ -26,6 +26,7 @@ import (
 var resourcePlural = &lint.MessageRule{
 	Name:   lint.NewRuleName(123, "resource-plural"),
 	OnlyIf: hasResourceAnnotation,
+	RuleType: lint.NewRuleType(lint.MustRule),
 	LintMessage: func(m *desc.MessageDescriptor) []lint.Problem {
 		r := utils.GetResource(m)
 		l := locations.MessageResource(m)
