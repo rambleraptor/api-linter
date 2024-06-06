@@ -161,7 +161,7 @@ When making a conversion PR, the following steps should be taken:
 3. Remove any rules that no longer apply.
 4. For each existing AIP rule, check the AEPs and see what changes (if any) are necessary.
 5. Denote each rule with a Should/Must tag.
-6. Fix tests.
+6. Run tests with `go test ./...` and fix any issues.
 
 <!-- prettier-ignore-start -->
 [aep]: https://aep.dev/
