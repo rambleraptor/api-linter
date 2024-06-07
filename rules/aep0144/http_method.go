@@ -24,4 +24,5 @@ var httpMethod = &lint.MethodRule{
 	Name:       lint.NewRuleName(144, "http-method"),
 	OnlyIf:     isAddRemoveMethod,
 	LintMethod: utils.LintHTTPMethod("POST"),
+	RuleType:   lint.NewRuleType(lint.MustRule),
 }
