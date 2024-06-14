@@ -19,7 +19,7 @@ import (
 	"github.com/googleapis/api-linter/rules/internal/utils"
 )
 
-// Add/Remove methods should use the HTTP POST method.
+// Add/Remove methods must use the HTTP POST method.
 var httpMethod = &lint.MethodRule{
 	Name:       lint.NewRuleName(144, "http-method"),
 	OnlyIf:     isAddRemoveMethod,
