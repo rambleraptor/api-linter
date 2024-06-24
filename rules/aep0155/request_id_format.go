@@ -22,6 +22,7 @@ import (
 
 var requestIdFormat = &lint.FieldRule{
 	Name: lint.NewRuleName(155, "request-id-format"),
+	RuleType: lint.NewRuleType(lint.MustRule),
 	OnlyIf: func(fd *desc.FieldDescriptor) bool {
 		return fd.GetName() == "request_id" && 
 		fd.GetType() != descriptorpb.FieldDescriptorProto_TYPE_MESSAGE;
