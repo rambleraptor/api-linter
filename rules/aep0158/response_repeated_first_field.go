@@ -21,6 +21,7 @@ import (
 
 var responseRepeatedFirstField = &lint.MessageRule{
 	Name: lint.NewRuleName(158, "response-repeated-first-field"),
+	RuleType: lint.NewRuleType(lint.MustRule),
 	OnlyIf: func(m *desc.MessageDescriptor) bool {
 		return isPaginatedResponseMessage(m) && len(m.GetFields()) > 0
 	},

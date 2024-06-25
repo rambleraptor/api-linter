@@ -22,6 +22,7 @@ import (
 
 var responseUnary = &lint.MethodRule{
 	Name:   lint.NewRuleName(158, "response-unary"),
+	RuleType: lint.NewRuleType(lint.MustRule),
 	OnlyIf: isPaginatedMethod,
 	LintMethod: func(m *desc.MethodDescriptor) []lint.Problem {
 		if m.IsServerStreaming() {
