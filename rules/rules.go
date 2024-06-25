@@ -80,7 +80,6 @@ import (
 type addRulesFuncType func(lint.RuleRegistry) error
 
 var aepAddRulesFuncs = []addRulesFuncType{
-	aep0004.AddRules,
 	aep0121.AddRules,
 	aep0122.AddRules,
 	aep0004.AddRules,
