@@ -67,7 +67,6 @@ import (
 	"github.com/googleapis/api-linter/rules/aep0144"
 	"github.com/googleapis/api-linter/rules/aep0151"
 	"github.com/googleapis/api-linter/rules/aep0152"
-	"github.com/googleapis/api-linter/rules/aep0154"
 	"github.com/googleapis/api-linter/rules/aep0155"
 	"github.com/googleapis/api-linter/rules/aep0156"
 	"github.com/googleapis/api-linter/rules/aep0158"
@@ -81,6 +80,7 @@ import (
 type addRulesFuncType func(lint.RuleRegistry) error
 
 var aepAddRulesFuncs = []addRulesFuncType{
+	aep0004.AddRules,
 	aep0121.AddRules,
 	aep0122.AddRules,
 	aep0004.AddRules,
@@ -97,7 +97,6 @@ var aepAddRulesFuncs = []addRulesFuncType{
 	aep0144.AddRules,
 	aep0151.AddRules,
 	aep0152.AddRules,
-	aep0154.AddRules,
 	aep0155.AddRules,
 	aep0156.AddRules,
 	aep0158.AddRules,
