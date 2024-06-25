@@ -22,9 +22,9 @@ import (
 )
 
 var requestPaginationMaxPageSize = &lint.MessageRule{
-	Name:   lint.NewRuleName(158, "request-max-page-size-field"),
+	Name:     lint.NewRuleName(158, "request-max-page-size-field"),
 	RuleType: lint.NewRuleType(lint.ShouldRule),
-	OnlyIf: isPaginatedRequestMessage,
+	OnlyIf:   isPaginatedRequestMessage,
 	LintMessage: func(m *desc.MessageDescriptor) []lint.Problem {
 		f, problems := utils.LintFieldPresent(m, "max_page_size")
 		if len(problems) > 0 {
