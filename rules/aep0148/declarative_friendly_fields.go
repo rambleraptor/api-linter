@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package aip0148
+package aep0148
 
 import (
 	"fmt"
@@ -26,6 +26,7 @@ import (
 
 var declarativeFriendlyRequired = &lint.MessageRule{
 	Name: lint.NewRuleName(148, "declarative-friendly-fields"),
+	RuleType: lint.NewRuleType(lint.MustRule),
 	OnlyIf: func(m *desc.MessageDescriptor) bool {
 		if resource := utils.DeclarativeFriendlyResource(m); resource == m {
 			return true
@@ -67,7 +68,7 @@ var declarativeFriendlyRequired = &lint.MessageRule{
 }
 
 var reqFields = map[string]string{
-	"name":         "string",
+	"path":         "string",
 	"uid":          "string",
 	"display_name": "string",
 	"create_time":  "google.protobuf.Timestamp",

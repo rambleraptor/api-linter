@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package aip0148
+package aep0148
 
 import (
 	"fmt"
@@ -24,6 +24,7 @@ import (
 
 var humanNames = &lint.FieldRule{
 	Name: lint.NewRuleName(148, "human-names"),
+	RuleType: lint.NewRuleType(lint.MustRule),
 	LintField: func(f *desc.FieldDescriptor) []lint.Problem {
 		for got, want := range corrections {
 			if f.GetName() == got {

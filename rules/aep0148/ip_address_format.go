@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package aip0148
+package aep0148
 
 import (
 	"strings"
@@ -32,6 +32,7 @@ var ipAddressFormats = []annotations.FieldInfo_Format{
 
 var ipAddressFormat = &lint.FieldRule{
 	Name: lint.NewRuleName(148, "ip-address-format"),
+	RuleType: lint.NewRuleType(lint.MustRule),
 	OnlyIf: func(fd *desc.FieldDescriptor) bool {
 		return fd.GetType() == descriptorpb.FieldDescriptorProto_TYPE_STRING && (fd.GetName() == "ip_address" || strings.HasSuffix(fd.GetName(), "_ip_address"))
 	},

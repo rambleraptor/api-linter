@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package aip0148 contains rules defined in https://aip.dev/148.
-package aip0148
+// Package aep0148 contains rules defined in https://aep.dev/148.
+package aep0148
 
 import (
 	"github.com/googleapis/api-linter/lint"
@@ -27,7 +27,6 @@ func AddRules(r lint.RuleRegistry) error {
 		fieldBehavior,
 		humanNames,
 		ipAddressFormat,
-		useUid,
 		uidFormat,
 	)
 }

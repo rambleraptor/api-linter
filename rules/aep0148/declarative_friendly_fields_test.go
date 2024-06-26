@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package aip0148
+package aep0148
 
 import (
 	"fmt"
@@ -29,7 +29,7 @@ func TestDeclarativeFriendlyFields(t *testing.T) {
 		skipped stringset.Set
 	}{
 		{"Valid", stringset.New()},
-		{"Name", stringset.New("name")},
+		{"Path", stringset.New("path")},
 		{"UID", stringset.New("uid")},
 		{"DisplayName", stringset.New("display_name")},
 		{"CreateTime", stringset.New("create_time")},
@@ -111,11 +111,11 @@ func TestDeclarativeFriendlyFieldsSingleton(t *testing.T) {
 		want   testutils.Problems
 	}{
 		{
-			"InvalidNoCreateTime", `string name = 1; string display_name = 2; google.protobuf.Timestamp update_time = 3;`,
+			"InvalidNoCreateTime", `string path = 1; string display_name = 2; google.protobuf.Timestamp update_time = 3;`,
 			testutils.Problems{{Message: "create_time"}},
 		},
 		{
-			"ValidNoDeleteTimeNoUid", `string name = 1; string display_name = 2; ` +
+			"ValidNoDeleteTimeNoUid", `string path = 1; string display_name = 2; ` +
 				`google.protobuf.Timestamp create_time = 3; google.protobuf.Timestamp update_time = 4;`,
 			nil,
 		},

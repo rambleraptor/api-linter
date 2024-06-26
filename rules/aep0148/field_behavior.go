@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package aip0148
+package aep0148
 
 import (
 	"bitbucket.org/creachadair/stringset"
@@ -23,6 +23,7 @@ import (
 
 var fieldBehavior = &lint.FieldRule{
 	Name: lint.NewRuleName(148, "field-behavior"),
+	RuleType: lint.NewRuleType(lint.MustRule),
 	OnlyIf: func(f *desc.FieldDescriptor) bool {
 		return utils.IsResource(f.GetOwner()) && outputOnlyFields.Contains(f.GetName())
 	},

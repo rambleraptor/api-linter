@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package aip0148
+package aep0148
 
 import (
 	"github.com/googleapis/api-linter/lint"
@@ -22,8 +22,11 @@ import (
 	"google.golang.org/protobuf/types/descriptorpb"
 )
 
+const uidStr = "uid"
+
 var uidFormat = &lint.FieldRule{
 	Name: lint.NewRuleName(148, "uid-format"),
+	RuleType: lint.NewRuleType(lint.MustRule),
 	OnlyIf: func(fd *desc.FieldDescriptor) bool {
 		return fd.GetType() == descriptorpb.FieldDescriptorProto_TYPE_STRING && fd.GetName() == uidStr
 	},
