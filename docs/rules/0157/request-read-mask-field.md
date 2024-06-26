@@ -11,7 +11,7 @@ redirect_from:
 # Partial responses: Request read mask field
 
 This rule enforces that all `read_mask` fields in requests have the correct
-type, as mandated in [AEP-157][].
+type, as mandated in [AIP-157][].
 
 ## Details
 
