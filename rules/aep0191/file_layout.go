@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package aip0191
+package aep0191
 
 import (
 	"github.com/googleapis/api-linter/lint"
@@ -21,6 +21,7 @@ import (
 
 var fileLayout = &lint.FileRule{
 	Name: lint.NewRuleName(191, "file-layout"),
+	RuleType: lint.NewRuleType(lint.ShouldRule),
 	LintFile: func(f *desc.FileDescriptor) (problems []lint.Problem) {
 		// Verify that services precede messages.
 		if len(f.GetMessageTypes()) > 0 {

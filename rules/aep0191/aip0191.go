@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package aip0191 contains rules defined in https://aip.dev/191.
-package aip0191
+// Package aep0191 contains rules defined in https://aep.dev/191.
+package aep0191
 
 import (
 	"regexp"
@@ -23,20 +23,13 @@ import (
 	"github.com/jhump/protoreflect/desc"
 )
 
-// AddRules adds all of the AIP-191 rules to the provided registry.
+// AddRules adds all of the AEP-191 rules to the provided registry.
 func AddRules(r lint.RuleRegistry) error {
 	return r.Register(
 		191,
-		csharpNamespace,
 		filename,
 		fileLayout,
-		fileOptionConsistency,
-		javaMultipleFiles,
-		javaOuterClassname,
-		javaPackage,
-		phpNamespace,
 		protoPkg,
-		rubyPackage,
 		syntax,
 	)
 }

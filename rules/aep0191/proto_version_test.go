@@ -1,4 +1,4 @@
-// Copyright 2021 Google LLC
+// Copyright 2019 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package aip0191
+package aep0191
 
 import (
 	"testing"
@@ -21,26 +21,29 @@ import (
 	"github.com/jhump/protoreflect/desc/builder"
 )
 
-func TestProtoPkg(t *testing.T) {
+func TestSyntax(t *testing.T) {
+	// Set up the two permutations.
 	tests := []struct {
 		testName string
-		filename string
-		pkg      string
+		isProto3 bool
 		problems testutils.Problems
 	}{
-		{"Valid", "google/example/library/v1/library.proto", "google.example.library.v1", testutils.Problems{}},
-		{"InvalidPackage", "google/example/library/v1/library.proto", "google.library.v1", testutils.Problems{{Message: "directory structure"}}},
-		{"InvalidDirectory", "google/v1/library.proto", "google.example.library.v1", testutils.Problems{{Message: "directory structure"}}},
-		{"IgnoreRootDirectory", "library.proto", "google.example.library.v1", testutils.Problems{}},
+		{"Valid", true, testutils.Problems{}},
+		{"Invalid", false, testutils.Problems{{Suggestion: `syntax = "proto3";`}}},
 	}
+
+	// Run each permutation as an individual test.
 	for _, test := range tests {
 		t.Run(test.testName, func(t *testing.T) {
-			f, err := builder.NewFile(test.filename).SetPackageName(test.pkg).Build()
+			// Build an appropriate file descriptor.
+			f, err := builder.NewFile("library.proto").SetProto3(test.isProto3).Build()
 			if err != nil {
-				t.Fatalf("Failed to build file: %s", err)
+				t.Fatalf("Could not build file descriptor.")
 			}
-			if diff := test.problems.SetDescriptor(f).Diff(protoPkg.Lint(f)); diff != "" {
-				t.Error(diff)
+
+			// Lint the file, and ensure we got the expected problems.
+			if diff := test.problems.SetDescriptor(f).Diff(syntax.Lint(f)); diff != "" {
+				t.Errorf(diff)
 			}
 		})
 	}

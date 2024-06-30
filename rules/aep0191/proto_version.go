@@ -12,33 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package aip0191
+package aep0191
 
 import (
-	"path/filepath"
-	"strings"
-
 	"github.com/googleapis/api-linter/lint"
 	"github.com/googleapis/api-linter/locations"
 	"github.com/jhump/protoreflect/desc"
 )
 
-var filename = &lint.FileRule{
-	Name: lint.NewRuleName(191, "filenames"),
+// APIs must use proto3.
+var syntax = &lint.FileRule{
+	Name: lint.NewRuleName(191, "proto-version"),
+	RuleType: lint.NewRuleType(lint.MustRule),
 	LintFile: func(f *desc.FileDescriptor) []lint.Problem {
-		fn := strings.ReplaceAll(filepath.Base(f.GetName()), ".proto", "")
-		if versionRegexp.MatchString(fn) {
+		if !f.IsProto3() {
 			return []lint.Problem{{
-				Message:    "The proto version must not be used as the filename.",
+				Message:    "All API proto files must use proto3 syntax.",
+				Suggestion: "syntax = \"proto3\";",
 				Descriptor: f,
-				Location:   locations.FilePackage(f),
-			}}
-		}
-		if !validCharacterRegexp.MatchString(fn) {
-			return []lint.Problem{{
-				Message:    "The filename has invalid characters.",
-				Descriptor: f,
-				Location:   locations.FilePackage(f),
+				Location:   locations.FileSyntax(f),
 			}}
 		}
 		return nil
