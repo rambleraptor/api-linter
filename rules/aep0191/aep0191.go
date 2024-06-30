@@ -17,10 +17,8 @@ package aep0191
 
 import (
 	"regexp"
-	"strings"
 
 	"github.com/googleapis/api-linter/lint"
-	"github.com/jhump/protoreflect/desc"
 )
 
 // AddRules adds all of the AEP-191 rules to the provided registry.
@@ -32,24 +30,6 @@ func AddRules(r lint.RuleRegistry) error {
 		protoPkg,
 		syntax,
 	)
-}
-
-func hasPackage(f *desc.FileDescriptor) bool {
-	return f.GetPackage() != ""
-}
-
-func packagingServiceNameEquals(serv, pkg, sep string) bool {
-	segments := strings.Split(pkg, sep)
-	for _, segment := range segments {
-		// If a packaging annotation segment and a service name are equal in a
-		// case-insensitive comparison, they must also be equal using a
-		// case-sensitive comparison.
-		if strings.EqualFold(segment, serv) && segment != serv {
-			return false
-		}
-	}
-
-	return true
 }
 
 var (
