@@ -31,7 +31,6 @@ func AddRules(r lint.RuleRegistry) error {
 		noMarkdownHeadings,
 		noMarkdownTables,
 		onlyLeadingComments,
-		trademarkedNames,
 	)
 }
 

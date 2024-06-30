@@ -24,6 +24,7 @@ import (
 
 var deprecatedComment = &lint.DescriptorRule{
 	Name:   lint.NewRuleName(192, "deprecated-comment"),
+	RuleType: lint.NewRuleType(lint.MustRule),
 	OnlyIf: isDeprecated,
 	LintDescriptor: func(d desc.Descriptor) []lint.Problem {
 		comment := utils.SeparateInternalComments(d.GetSourceInfo().GetLeadingComments())

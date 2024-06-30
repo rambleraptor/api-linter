@@ -25,6 +25,7 @@ import (
 
 var noMarkdownTables = &lint.DescriptorRule{
 	Name: lint.NewRuleName(192, "no-markdown-tables"),
+	RuleType: lint.NewRuleType(lint.MustRule),
 	LintDescriptor: func(d desc.Descriptor) []lint.Problem {
 		for _, cmt := range utils.SeparateInternalComments(d.GetSourceInfo().GetLeadingComments()).External {
 			for _, line := range strings.Split(cmt, "\n") {

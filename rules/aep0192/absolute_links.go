@@ -27,6 +27,7 @@ import (
 // absoluteLinks ensures that a descriptor has only absolute links.
 var absoluteLinks = &lint.DescriptorRule{
 	Name: lint.NewRuleName(192, "absolute-links"),
+	RuleType: lint.NewRuleType(lint.MustRule),
 	LintDescriptor: func(d desc.Descriptor) []lint.Problem {
 		comment := strings.Join(
 			utils.SeparateInternalComments(d.GetSourceInfo().GetLeadingComments()).External,

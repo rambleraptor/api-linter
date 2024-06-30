@@ -26,6 +26,7 @@ import (
 // hasComments complains if there is no comment above something.
 var hasComments = &lint.DescriptorRule{
 	Name: lint.NewRuleName(192, "has-comments"),
+	RuleType: lint.NewRuleType(lint.MustRule),
 	LintDescriptor: func(d desc.Descriptor) (problems []lint.Problem) {
 		comment := utils.SeparateInternalComments(d.GetSourceInfo().GetLeadingComments())
 		if len(comment.External) == 0 {
