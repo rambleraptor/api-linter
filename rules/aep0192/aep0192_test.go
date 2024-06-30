@@ -1,4 +1,4 @@
-package aip0192
+package aep0192
 
 import (
 	"testing"

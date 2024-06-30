@@ -12,37 +12,38 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package aip0192
+package aep0192
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/googleapis/api-linter/rules/internal/testutils"
 )
 
-func TestNoMarkdownTables(t *testing.T) {
-	problem := testutils.Problems{{Message: "Markdown tables"}}
+func TestNoMarkdownHeadings(t *testing.T) {
+	problem := testutils.Problems{{Message: "Markdown headings"}}
 	for _, test := range []struct {
 		name     string
-		Comment  string
+		comment  string
 		problems testutils.Problems
 	}{
 		{"Valid", "foo bar baz", nil},
-		{"ValidMidline", "foo - bar", nil},
-		{"ValidPipe", "foo | bar", nil},
-		{"WeirdButLegal", "|-|-|", nil},
-		{"TableSeparator", "--- | ---", problem},
-		{"BoundedTableSeparator", "| --- | --- |", problem},
-		{"MoreColumnTable", "--- | --- | --- | --- | ---", problem},
-		{"BiggerColumnTable", "------------ | -----", problem},
+		{"ValidMidline", "foo bar # baz", nil},
+		{"H1", "# foo bar baz", problem},
+		{"H2", "## foo bar baz", problem},
+		{"H3", "### foo bar baz", problem},
+		{"H4", "#### foo bar baz", problem},
+		{"InvalidThirdLine", "foo bar baz\n\n# spam eggs", problem},
 	} {
 		t.Run(test.name, func(t *testing.T) {
+			cmt := "// " + strings.ReplaceAll(test.comment, "\n", "\n// ")
 			f := testutils.ParseProto3Tmpl(t, `
-			  // {{.Comment}}
+			  {{.Comment}}
 			  message Foo {}
-			`, test)
+			`, struct{ Comment string }{cmt})
 			m := f.GetMessageTypes()[0]
-			if diff := test.problems.SetDescriptor(m).Diff(noMarkdownTables.Lint(f)); diff != "" {
+			if diff := test.problems.SetDescriptor(m).Diff(noMarkdownHeadings.Lint(f)); diff != "" {
 				t.Errorf(diff)
 			}
 		})

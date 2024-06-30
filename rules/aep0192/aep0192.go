@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package aip0192 contains rules defined in https://aip.dev/192.
-package aip0192
+// Package aep0192 contains rules defined in https://aep.dev/192.
+package aep0192
 
 import (
 	"github.com/googleapis/api-linter/lint"
 	"github.com/jhump/protoreflect/desc"
 )
 
-// AddRules adds all of the AIP-192 rules to the provided registry.
+// AddRules adds all of the AEP-192 rules to the provided registry.
 func AddRules(r lint.RuleRegistry) error {
 	return r.Register(
 		192,

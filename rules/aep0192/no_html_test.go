@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package aip0192
+package aep0192
 
 import (
 	"strings"

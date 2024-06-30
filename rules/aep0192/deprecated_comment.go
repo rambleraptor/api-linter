@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2021 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,29 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package aip0192
+package aep0192
 
 import (
-	"fmt"
+	"strings"
 
 	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/locations"
 	"github.com/googleapis/api-linter/rules/internal/utils"
 	"github.com/jhump/protoreflect/desc"
 )
 
-// hasComments complains if there is no comment above something.
-var hasComments = &lint.DescriptorRule{
-	Name: lint.NewRuleName(192, "has-comments"),
-	LintDescriptor: func(d desc.Descriptor) (problems []lint.Problem) {
+var deprecatedComment = &lint.DescriptorRule{
+	Name:   lint.NewRuleName(192, "deprecated-comment"),
+	OnlyIf: isDeprecated,
+	LintDescriptor: func(d desc.Descriptor) []lint.Problem {
 		comment := utils.SeparateInternalComments(d.GetSourceInfo().GetLeadingComments())
-		if len(comment.External) == 0 {
-			problems = append(problems, lint.Problem{
-				Message:    fmt.Sprintf("Missing comment over %q.", d.GetName()),
-				Descriptor: d,
-				Location:   locations.DescriptorName(d),
-			})
+		if len(comment.External) > 0 && strings.HasPrefix(comment.External[0], "Deprecated:") {
+			return nil
 		}
-		return
+		return []lint.Problem{{
+			Message:    `Use "Deprecated: <reason>" as the first line in the comment.`,
+			Descriptor: d,
+		}}
 	},
 }

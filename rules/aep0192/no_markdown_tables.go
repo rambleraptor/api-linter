@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package aip0192
+package aep0192
 
 import (
+	"regexp"
 	"strings"
 
 	"github.com/googleapis/api-linter/lint"
@@ -22,17 +23,22 @@ import (
 	"github.com/jhump/protoreflect/desc"
 )
 
-var deprecatedComment = &lint.DescriptorRule{
-	Name:   lint.NewRuleName(192, "deprecated-comment"),
-	OnlyIf: isDeprecated,
+var noMarkdownTables = &lint.DescriptorRule{
+	Name: lint.NewRuleName(192, "no-markdown-tables"),
 	LintDescriptor: func(d desc.Descriptor) []lint.Problem {
-		comment := utils.SeparateInternalComments(d.GetSourceInfo().GetLeadingComments())
-		if len(comment.External) > 0 && strings.HasPrefix(comment.External[0], "Deprecated:") {
-			return nil
+		for _, cmt := range utils.SeparateInternalComments(d.GetSourceInfo().GetLeadingComments()).External {
+			for _, line := range strings.Split(cmt, "\n") {
+				line = strings.TrimSpace(line)
+				if table.FindString(line) != "" {
+					return []lint.Problem{{
+						Message:    "Comments should not include Markdown tables.",
+						Descriptor: d,
+					}}
+				}
+			}
 		}
-		return []lint.Problem{{
-			Message:    `Use "Deprecated: <reason>" as the first line in the comment.`,
-			Descriptor: d,
-		}}
+		return nil
 	},
 }
+
+var table = regexp.MustCompile(`^([|] )?[-]{3,}[ ]?([|][ ]?[-]{3,}[ ]?)+[|]?$`)
