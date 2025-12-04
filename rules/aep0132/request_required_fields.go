@@ -18,15 +18,16 @@ import (
 	"fmt"
 
 	"bitbucket.org/creachadair/stringset"
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 // The list request message should not have unrecognized fields.
 var requestRequiredFields = &lint.MessageRule{
-	Name:   lint.NewRuleName(132, "request-required-fields"),
-	OnlyIf: utils.IsListRequestMessage,
+	Name:     lint.NewRuleName(132, "request-required-fields"),
+	RuleType: lint.NewRuleType(lint.MustRule),
+	OnlyIf:   utils.IsListRequestMessage,
 	LintMessage: func(m *desc.MessageDescriptor) (problems []lint.Problem) {
 		// Rule check: Establish that there are no unexpected fields.
 		allowedRequiredFields := stringset.New("parent")

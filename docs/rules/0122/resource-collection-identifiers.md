@@ -10,13 +10,13 @@ redirect_from:
 
 # Resource pattern collection identifiers
 
-This rule enforces that messages that have a `google.api.resource` annotation
+This rule enforces that messages that have a `aep.api.resource` annotation
 have properly formatted collection identifiers in each `pattern`, as described
 in [AEP-122][].
 
 ## Details
 
-This rule scans messages with a `google.api.resource` annotation, and validates
+This rule scans messages with a `aep.api.resource` annotation, and validates
 the format of `pattern` collection identifiers, specifically that they are in
 lowerCamelCase form and must start with a lowercase letter.
 
@@ -27,24 +27,24 @@ lowerCamelCase form and must start with a lowercase letter.
 ```proto
 // Incorrect.
 message Book {
-  option (google.api.resource) = {
+  option (aep.api.resource) = {
     type: "library.googleapis.com/Book"
-    // Collection identifiers must be lowerCamelCase.
-    pattern: "Publishers/{publisher}/Books/{book}"
+    // Collection identifiers must be kebab-case.
+    pattern: "Publishers/{publisher}/publishedBooks/{book}"
   };
-  string name = 1;
+  string path = 1;
 }
 ```
 
 ```proto
 // Incorrect.
 message Book {
-  option (google.api.resource) = {
+  option (aep.api.resource) = {
     type: "library.googleapis.com/Book"
     // Collection identifiers must begin with a lower-cased letter.
-    pattern: "/publishers/{publisher}/Books/{book}"
+    pattern: "/publishers/{publisher}/Published-books/{book}"
   };
-  string name = 1;
+  string path = 1;
 }
 ```
 
@@ -53,11 +53,11 @@ message Book {
 ```proto
 // Correct.
 message Book {
-  option (google.api.resource) = {
+  option (aep.api.resource) = {
     type: "library.googleapis.com/Book"
-    pattern: "publishers/{publisher}/books/{book}"
+    pattern: "publishers/{publisher}/published-books/{book}"
   };
-  string name = 1;
+  string path = 1;
 }
 ```
 
@@ -69,11 +69,11 @@ If you need to violate this rule, use a leading comment above the message.
 // (-- api-linter: core::0122::resource-collection-identifiers=disabled
 //     aep.dev/not-precedent: We need to do this because reasons. --)
 message Book {
-  option (google.api.resource) = {
+  option (aep.api.resource) = {
     type: "library.googleapis.com/Book"
     pattern: "Publishers/{publisher}/Books/{book}"
   };
-  string name = 1;
+  string path = 1;
 }
 ```
 

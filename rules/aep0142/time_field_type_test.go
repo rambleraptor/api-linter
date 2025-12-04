@@ -17,7 +17,7 @@ package aep0142
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 )
 
 func TestFieldType(t *testing.T) {
@@ -47,7 +47,7 @@ func TestFieldType(t *testing.T) {
 			`, test)
 			field := file.GetMessageTypes()[0].GetFields()[0]
 			if diff := test.problems.SetDescriptor(field).Diff(fieldType.Lint(file)); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}

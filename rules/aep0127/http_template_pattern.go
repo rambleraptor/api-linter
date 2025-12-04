@@ -19,10 +19,10 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/locations"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/locations"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 var (
@@ -32,7 +32,7 @@ var (
 )
 
 type resourceReference struct {
-	// The path of the field with the `google.api.resource_reference`. This is
+	// The path of the field with the `(aep.api.field_info).resource_reference`. This is
 	// provided as a variable in the HTTPRule.
 	fieldPath string
 	// A template that the resource's pattern string must adhere to. This is
@@ -66,16 +66,21 @@ func httpResourceReferences(httpRule *utils.HTTPRule, msg *desc.MessageDescripto
 
 		// Extract the name of the resource referenced by this field.
 		ref := utils.GetResourceReference(field)
-		if ref == nil || ref.GetChildType() != "" {
+		if ref == nil || len(ref.GetChildType()) > 0 {
 			// TODO(#1047): Support the case where a resource has
 			// multiple parent resources.
+			continue
+		}
+
+		types := ref.GetType()
+		if len(types) == 0 {
 			continue
 		}
 
 		resourceRefs = append(resourceRefs, resourceReference{
 			fieldPath:       fieldPath,
 			pathTemplate:    template,
-			resourceRefName: ref.GetType(),
+			resourceRefName: types[0],
 		})
 	}
 	return resourceRefs

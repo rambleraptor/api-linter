@@ -3,7 +3,7 @@ rule:
   aep: 162
   name: [core, '0162', rollback-request-name-reference]
   summary: |
-    Rollback requests should annotate the `name` field with `google.api.resource_reference`.
+    Rollback requests should annotate the `name` field with `(aep.api.field_info).resource_reference`.
 permalink: /162/rollback-request-name-reference
 redirect_from:
   - /0162/rollback-request-name-reference
@@ -12,13 +12,13 @@ redirect_from:
 # Rollback requests: Name resource reference
 
 This rule enforces that all `Rollback` requests have
-`google.api.resource_reference` on their `string name` field, as mandated in
+`(aep.api.field_info).resource_reference` on their `string name` field, as mandated in
 [AEP-162][].
 
 ## Details
 
 This rule looks at the `name` field of any message matching `Rollback*Request`
-and complains if it does not have a `google.api.resource_reference` annotation.
+and complains if it does not have a `(aep.api.field_info).resource_reference` annotation.
 
 ## Examples
 
@@ -27,10 +27,10 @@ and complains if it does not have a `google.api.resource_reference` annotation.
 ```proto
 // Incorrect.
 message RollbackBookRequest {
-  // The `google.api.resource_reference` annotation should also be included.
-  string name = 1 [(google.api.field_behavior) = REQUIRED];
+  // The `(aep.api.field_info).resource_reference` annotation should also be included.
+  string name = 1 [(aep.api.field_info).field_behavior = FIELD_BEHAVIOR_REQUIRED];
 
-  string revision_id = 2 [(google.api.field_behavior) = REQUIRED];
+  string revision_id = 2 [(aep.api.field_info).field_behavior = FIELD_BEHAVIOR_REQUIRED];
 }
 ```
 
@@ -40,11 +40,11 @@ message RollbackBookRequest {
 // Correct.
 message RollbackBookRequest {
   string name = 1 [
-    (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference).type = "library.googleapis.com/Book"
+    (aep.api.field_behavior) = FIELD_BEHAVIOR_REQUIRED,
+    (aep.api.field_info).resource_reference = "library.googleapis.com/Book"
   ];
 
-  string revision_id = 2 [(google.api.field_behavior) = REQUIRED];
+  string revision_id = 2 [(aep.api.field_info).field_behavior = FIELD_BEHAVIOR_REQUIRED];
 }
 ```
 
@@ -57,9 +57,9 @@ Remember to also include an [aep.dev/not-precedent][] comment explaining why.
 message RollbackBookRequest {
   // (-- api-linter: core::0162::rollback-request-name-reference=disabled
   //     aep.dev/not-precedent: We need to do this because reasons. --)
-  string name = 1 [(google.api.field_behavior) = REQUIRED];
+  string name = 1 [(aep.api.field_info).field_behavior = FIELD_BEHAVIOR_REQUIRED];
 
-  string revision_id = 2 [(google.api.field_behavior) = REQUIRED];
+  string revision_id = 2 [(aep.api.field_info).field_behavior = FIELD_BEHAVIOR_REQUIRED];
 }
 ```
 

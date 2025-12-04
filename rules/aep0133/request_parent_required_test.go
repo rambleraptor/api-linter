@@ -3,7 +3,7 @@ package aep0133
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 )
 
 func TestRequestParentFieldRequired(t *testing.T) {
@@ -31,7 +31,7 @@ func TestRequestParentFieldRequired(t *testing.T) {
 			problems := requestParentRequired.Lint(f)
 			message := f.GetMessageTypes()[0]
 			if diff := test.problems.SetDescriptor(message).Diff(problems); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}
@@ -40,12 +40,12 @@ func TestRequestParentFieldRequired(t *testing.T) {
 	// than the other tests and therefore handled separately.
 	t.Run("ValidTopLevel", func(t *testing.T) {
 		f := testutils.ParseProto3String(t, `
-			import "google/api/resource.proto";
+			import "aep/api/resource.proto";
 			message CreateBookRequest {
 				Book book = 2;
 			}
 			message Book {
-				option (google.api.resource) = {
+				option (aep.api.resource) = {
 					pattern: "books/{book}"
 				};
 				string name = 1;
@@ -53,7 +53,7 @@ func TestRequestParentFieldRequired(t *testing.T) {
 		`)
 		problems := requestParentRequired.Lint(f)
 		if diff := (testutils.Problems{}).Diff(problems); diff != "" {
-			t.Errorf(diff)
+			t.Error(diff)
 		}
 	})
 }

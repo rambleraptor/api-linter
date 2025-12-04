@@ -18,8 +18,8 @@ package aep0133
 import (
 	"strings"
 
-	"github.com/googleapis/api-linter/lint"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 // AddRules accepts a register function and registers each of
@@ -37,13 +37,11 @@ func AddRules(r lint.RuleRegistry) error {
 		requestIDField,
 		requestParentBehavior,
 		requestParentField,
-		requestParentReference,
 		requestParentRequired,
 		requestRequiredFields,
 		requestResourceBehavior,
 		resourceField,
 		resourceReferenceType,
-		responseLRO,
 		synonyms,
 		unknownFields,
 	)

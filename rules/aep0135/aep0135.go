@@ -16,7 +16,7 @@
 package aep0135
 
 import (
-	"github.com/googleapis/api-linter/lint"
+	"github.com/aep-dev/api-linter/lint"
 )
 
 // AddRules accepts a register function and registers each of
@@ -27,15 +27,15 @@ func AddRules(r lint.RuleRegistry) error {
 		forceField,
 		httpBody,
 		httpMethod,
-		httpNameField,
+		httpPathField,
 		methodSignature,
 		responseMessageName,
 		requestMessageName,
 		requestForceField,
-		requestNameBehavior,
-		requestNameField,
-		requestNameReference,
-		requestNameRequired,
+		requestPathBehavior,
+		requestPathField,
+		requestPathReference,
+		requestPathRequired,
 		requestRequiredFields,
 		responseLRO,
 		unknownFields,

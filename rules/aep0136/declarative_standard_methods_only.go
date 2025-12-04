@@ -18,14 +18,15 @@ import (
 	"strings"
 
 	"bitbucket.org/creachadair/stringset"
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 var standardMethodsOnly = &lint.MethodRule{
-	Name:   lint.NewRuleName(136, "declarative-standard-methods-only"),
-	OnlyIf: utils.IsDeclarativeFriendlyMethod,
+	Name:     lint.NewRuleName(136, "declarative-standard-methods-only"),
+	RuleType: lint.NewRuleType(lint.ShouldRule),
+	OnlyIf:   utils.IsDeclarativeFriendlyMethod,
 	LintMethod: func(m *desc.MethodDescriptor) []lint.Problem {
 		// Standard methods are fine.
 		standard := stringset.New("Get", "List", "Create", "Update", "Delete", "Undelete", "Batch")

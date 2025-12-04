@@ -17,7 +17,7 @@ package aep0134
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 )
 
 func TestResourceField(t *testing.T) {
@@ -30,6 +30,7 @@ func TestResourceField(t *testing.T) {
 		problems          testutils.Problems
 	}{
 		{"Valid", "UpdateBookRequest", "Book", "book", nil},
+		{"Valid", "UpdateBookRequest", "string", "path", nil},
 		{"InvalidFieldName", "UpdateBookRequest", "Book", "big_book", testutils.Problems{{Suggestion: "book"}}},
 		{"IrrelevantMessage", "ModifyBookRequest", "Book", "big_book", nil},
 		{"IrrelevantFieldType", "UpdateBookRequest", "string", "big_book", nil},
@@ -51,7 +52,7 @@ func TestResourceField(t *testing.T) {
 			// Run the lint rule, and establish that it returns the correct problems.
 			problems := requestResourceField.Lint(file)
 			if diff := test.problems.SetDescriptor(field).Diff(problems); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}

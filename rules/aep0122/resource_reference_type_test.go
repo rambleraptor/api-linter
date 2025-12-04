@@ -17,13 +17,11 @@ package aep0122
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 )
 
 func TestResourceReferenceType(t *testing.T) {
-	ann := ` [(google.api.resource_reference) = {
-		type: "library.googleapis.com/Author"
-	}]`
+	ann := ` [(aep.api.field_info).resource_reference = "library.googleapis.com/Author"]`
 	for _, test := range []struct {
 		name       string
 		Type       string
@@ -36,7 +34,8 @@ func TestResourceReferenceType(t *testing.T) {
 	} {
 		t.Run(test.name, func(t *testing.T) {
 			f := testutils.ParseProto3Tmpl(t, `
-				import "google/api/resource.proto";
+				import "aep/api/resource.proto";
+  import "aep/api/field_info.proto";
 
 				message Book {
 					{{.Type}} author = 1{{.Annotation}};
@@ -46,7 +45,7 @@ func TestResourceReferenceType(t *testing.T) {
 			`, test)
 			field := f.GetMessageTypes()[0].GetFields()[0]
 			if diff := test.problems.SetDescriptor(field).Diff(resourceReferenceType.Lint(f)); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}

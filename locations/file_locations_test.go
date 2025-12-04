@@ -18,7 +18,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint/desc"
 	"github.com/jhump/protoreflect/desc/builder"
 	dpb "google.golang.org/protobuf/types/descriptorpb"
 )
@@ -28,7 +28,7 @@ func TestLocations(t *testing.T) {
 		// proto3 rules!
 		syntax = "proto3";
 
-		import "google/api/resource.proto";
+		import "aep/api/resource.proto";
 
 		package google.api.linter;
 
@@ -86,7 +86,7 @@ func TestLocations(t *testing.T) {
 				testName: "Import",
 				idxFx:    FileImport,
 				idx:      0,
-				wantSpan: []int32{3, 0, int32(len(`import "google/api/resource.proto";`))},
+				wantSpan: []int32{3, 0, int32(len(`import "aep/api/resource.proto";`))},
 			},
 			{
 				testName: "CCEnableArenas",
@@ -103,7 +103,7 @@ func TestLocations(t *testing.T) {
 					l = test.idxFx(f, test.idx)
 				}
 				if diff := cmp.Diff(l.Span, test.wantSpan); diff != "" {
-					t.Errorf(diff)
+					t.Error(diff)
 				}
 			})
 		}
@@ -143,7 +143,7 @@ func TestMissingLocations(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.testName, func(t *testing.T) {
 			if diff := cmp.Diff(test.fx(f).Span, []int32{0, 0, 0}); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}

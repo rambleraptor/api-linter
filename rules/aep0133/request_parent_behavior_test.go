@@ -17,7 +17,7 @@ package aep0133
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 )
 
 func TestRequestParentBehavior(t *testing.T) {
@@ -27,20 +27,20 @@ func TestRequestParentBehavior(t *testing.T) {
 		FieldBehavior string
 		problems      testutils.Problems
 	}{
-		{"Valid", "parent", " [(google.api.field_behavior) = REQUIRED]", testutils.Problems{}},
-		{"Missing", "parent", "", testutils.Problems{{Message: "(google.api.field_behavior) = REQUIRED"}}},
+		{"Valid", "parent", " [(aep.api.field_info).field_behavior = FIELD_BEHAVIOR_REQUIRED]", testutils.Problems{}},
+		{"Missing", "parent", "", testutils.Problems{{Message: "(aep.api.field_info).field_behavior = FIELD_BEHAVIOR_REQUIRED"}}},
 		{"Irrelevant", "something_else", "", testutils.Problems{}},
 	} {
 		t.Run(test.name, func(t *testing.T) {
 			f := testutils.ParseProto3Tmpl(t, `
-				import "google/api/field_behavior.proto";
+				import "aep/api/field_info.proto";
 				message  CreateBookRequest {
 					string {{.FieldName}} = 1{{.FieldBehavior}};
 				}
 			`, test)
 			field := f.GetMessageTypes()[0].GetFields()[0]
 			if diff := test.problems.SetDescriptor(field).Diff(requestParentBehavior.Lint(f)); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}

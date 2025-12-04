@@ -17,7 +17,7 @@ package aep0122
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 )
 
 func TestResourceCollectionIdentifiers(t *testing.T) {
@@ -27,15 +27,17 @@ func TestResourceCollectionIdentifiers(t *testing.T) {
 		problems testutils.Problems
 	}{
 		{"Valid", "author/{author}/books/{book}", testutils.Problems{}},
-		{"InvalidUpperCase", "author/{author}/Books/{book}", testutils.Problems{{Message: "lowerCamelCase"}}},
+		{"ValidWithIdSuffix", "stores/{store_id}/items/{item_id}", testutils.Problems{}},
+		{"InvalidCapitalIdSuffix", "stores/{Store_id}/items/{item_id}", testutils.Problems{{Message: "lowercase"}}},
+		{"InvalidUpperCase", "author/{author}/Books/{book}", testutils.Problems{{Message: "kebab-case"}}},
 		{"InvalidStartsWithSlash", "/author/{author}/Books/{book}", testutils.Problems{{Message: "lowercase letter"}}},
 		{"InvalidStartsWithCapitalLetter", "Author/{author}/Books/{book}", testutils.Problems{{Message: "lowercase letter"}}},
 	} {
 		t.Run(test.name, func(t *testing.T) {
 			f := testutils.ParseProto3Tmpl(t, `
-			import "google/api/resource.proto";
+			import "aep/api/resource.proto";
 			message Book {
-				option (google.api.resource) = {
+				option (aep.api.resource) = {
 					type: "library.googleapis.com/Book"
 					pattern: "publishers/{publisher}/books/{book}"
 					pattern: "{{ .Pattern }}"
@@ -45,7 +47,7 @@ func TestResourceCollectionIdentifiers(t *testing.T) {
 		`, test)
 			m := f.GetMessageTypes()[0]
 			if diff := test.problems.SetDescriptor(m).Diff(resourceCollectionIdentifiers.Lint(f)); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}

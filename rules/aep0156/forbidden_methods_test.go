@@ -17,7 +17,7 @@ package aep0156
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 )
 
 func TestForbiddenMethods(t *testing.T) {
@@ -39,7 +39,7 @@ func TestForbiddenMethods(t *testing.T) {
 			service Library {
 				rpc {{.MethodName}}({{.MethodName}}Request) returns (Settings) {
 					option (google.api.http) = {
-						post: "/v1/{name=publishers/*{{.Suffix}}}"
+						post: "/v1/{path=publishers/*{{.Suffix}}}"
 						body: "settings"
 					};
 				}
@@ -50,7 +50,7 @@ func TestForbiddenMethods(t *testing.T) {
 		method := f.GetServices()[0].GetMethods()[0]
 		problems := forbiddenMethods.Lint(f)
 		if diff := test.problems.SetDescriptor(method).Diff(problems); diff != "" {
-			t.Errorf(diff)
+			t.Error(diff)
 		}
 	}
 }

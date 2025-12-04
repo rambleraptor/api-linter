@@ -15,9 +15,10 @@
 package lint
 
 import (
+	"fmt"
 	"testing"
 
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint/desc"
 	"github.com/jhump/protoreflect/desc/builder"
 	dpb "google.golang.org/protobuf/types/descriptorpb"
 )
@@ -29,6 +30,14 @@ func TestRuleIsEnabled(t *testing.T) {
 		LintFile: func(fd *desc.FileDescriptor) []Problem {
 			return []Problem{}
 		},
+	}
+
+	mustRule := &FileRule{
+		Name: RuleName("a::b::c"),
+		LintFile: func(fd *desc.FileDescriptor) []Problem {
+			return []Problem{}
+		},
+		RuleType: NewRuleType(MustRule),
 	}
 
 	aliases := map[string]string{
@@ -78,6 +87,24 @@ func TestRuleIsEnabled(t *testing.T) {
 				if got, want := ruleIsEnabled(rule, f.GetMessageTypes()[0], nil, aliases, true), true; got != want {
 					t.Errorf("Expected the test rule with ignoreCommentDisables true to return %v from ruleIsEnabled, got %v", want, got)
 				}
+			}
+		})
+	}
+
+	for _, test := range tests {
+		t.Run(fmt.Sprintf("MustRule/%s", test.testName), func(t *testing.T) {
+			f, err := builder.NewFile("test.proto").SetSyntaxComments(builder.Comments{
+				LeadingComment: test.fileComment,
+			}).AddMessage(
+				builder.NewMessage("MyMessage").SetComments(builder.Comments{
+					LeadingComment: test.messageComment,
+				}),
+			).Build()
+			if err != nil {
+				t.Fatalf("Error building test message")
+			}
+			if !ruleIsEnabled(mustRule, f.GetMessageTypes()[0], nil, aliases, false) {
+				t.Errorf("Expected the test rule to return true from ruleIsEnabled on must rule, got false")
 			}
 		})
 	}

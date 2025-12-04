@@ -18,10 +18,10 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/locations"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/locations"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 var methodSignature = &lint.MethodRule{
@@ -35,21 +35,22 @@ var methodSignature = &lint.MethodRule{
 			return []lint.Problem{{
 				Message: fmt.Sprintf(
 					"Get methods should include `(google.api.method_signature) = %q`",
-					"name",
+					"path",
 				),
 				Descriptor: m,
 			}}
 		}
 
 		// Check if the signature is wrong.
-		if !reflect.DeepEqual(signatures[0], []string{"name"}) {
+		if !reflect.DeepEqual(signatures[0], []string{"path"}) {
 			return []lint.Problem{{
-				Message:    `The method signature for Get methods should be "name".`,
-				Suggestion: `option (google.api.method_signature) = "name";`,
+				Message:    `The method signature for Get methods should be "path".`,
+				Suggestion: `option (google.api.method_signature) = "path";`,
 				Descriptor: m,
 				Location:   locations.MethodSignature(m, 0),
 			}}
 		}
 		return nil
 	},
+	RuleType: lint.NewRuleType(lint.MustRule),
 }

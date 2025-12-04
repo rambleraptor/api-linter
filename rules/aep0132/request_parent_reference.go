@@ -15,13 +15,14 @@
 package aep0132
 
 import (
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 var requestParentReference = &lint.FieldRule{
-	Name: lint.NewRuleName(132, "request-parent-reference"),
+	Name:     lint.NewRuleName(132, "request-parent-reference"),
+	RuleType: lint.NewRuleType(lint.MustRule),
 	OnlyIf: func(f *desc.FieldDescriptor) bool {
 		return utils.IsListRequestMessage(f.GetOwner()) && f.GetName() == "parent"
 	},

@@ -17,7 +17,7 @@ package aep0133
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 )
 
 func TestMethodSignature(t *testing.T) {
@@ -79,7 +79,7 @@ func TestMethodSignature(t *testing.T) {
 			`, test)
 			m := f.GetServices()[0].GetMethods()[0]
 			if diff := test.problems.SetDescriptor(m).Diff(methodSignature.Lint(f)); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}
@@ -89,7 +89,7 @@ func TestMethodSignature(t *testing.T) {
 	t.Run("NoParent", func(t *testing.T) {
 		file := testutils.ParseProto3String(t, `
 			import "google/api/client.proto";
-			import "google/api/resource.proto";
+			import "aep/api/resource.proto";
 			service Library {
 				rpc CreateBook(CreateBookRequest) returns (Book) {
 					option (google.api.method_signature) = "book,book_id";
@@ -100,13 +100,13 @@ func TestMethodSignature(t *testing.T) {
 				string book_id = 2;
 			}
 			message Book {
-				option (google.api.resource) = {
+				option (aep.api.resource) = {
 					pattern: "books/{book}"
 				};
 			}
 		`)
 		if diff := (testutils.Problems{}).Diff(methodSignature.Lint(file)); diff != "" {
-			t.Errorf(diff)
+			t.Error(diff)
 		}
 	})
 }

@@ -16,7 +16,7 @@
 package aep0132
 
 import (
-	"github.com/googleapis/api-linter/lint"
+	"github.com/aep-dev/api-linter/lint"
 )
 
 // AddRules adds all of the AEP-132 rules to the provided registry.
@@ -25,7 +25,6 @@ func AddRules(r lint.RuleRegistry) error {
 		132,
 		httpBody,
 		httpMethod,
-		httpURIParent,
 		methodSignature,
 		requestFieldTypes,
 		requestMessageName,

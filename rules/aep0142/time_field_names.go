@@ -17,14 +17,15 @@ package aep0142
 import (
 	"strings"
 
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/locations"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/locations"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 var fieldNames = &lint.FieldRule{
-	Name:   lint.NewRuleName(142, "time-field-names"),
-	OnlyIf: isTimestamp,
+	Name:     lint.NewRuleName(142, "time-field-names"),
+	OnlyIf:   isTimestamp,
+	RuleType: lint.NewRuleType(lint.ShouldRule),
 	LintField: func(f *desc.FieldDescriptor) []lint.Problem {
 		// Look for common non-imperative terms.
 		mistakes := map[string]string{

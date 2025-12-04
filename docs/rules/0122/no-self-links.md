@@ -25,11 +25,11 @@ named `self_link`.
 ```proto
 // Incorrect.
 message Book {
-  option (google.api.resource) = {
+  option (aep.api.resource) = {
     type: "library.googleapis.com/Book"
     pattern: "books/{book}"
   };
-  string name = 1;
+  string path = 1;
 
   // Incorrect. Resources should contain self-links.
   string self_link = 2;
@@ -41,11 +41,11 @@ message Book {
 ```proto
 // Correct.
 message Book {
-  option (google.api.resource) = {
+  option (aep.api.resource) = {
     type: "library.googleapis.com/Book"
     pattern: "books/{book}"
   };
-  string name = 1;
+  string path = 1;
 }
 ```
 
@@ -57,11 +57,11 @@ Remember to also include an [aep.dev/not-precedent][] comment explaining why.
 ```proto
 // Incorrect.
 message Book {
-  option (google.api.resource) = {
+  option (aep.api.resource) = {
     type: "library.googleapis.com/Book"
     pattern: "books/{book}"
   };
-  string name = 1;
+  string path = 1;
 
   // (-- api-linter: core::0122::no-self-links=disabled
   //     aep.dev/not-precedent: We need to do this because reasons. --)

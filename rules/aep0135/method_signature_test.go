@@ -17,7 +17,7 @@ package aep0135
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 )
 
 func TestMethodSignature(t *testing.T) {
@@ -29,20 +29,20 @@ func TestMethodSignature(t *testing.T) {
 		Force      string
 		problems   testutils.Problems
 	}{
-		{"Valid", "DeleteBook", `option (google.api.method_signature) = "name";`, "", "", testutils.Problems{}},
-		{"Missing", "DeleteBook", "", "", "", testutils.Problems{{Message: `(google.api.method_signature) = "name"`}}},
+		{"Valid", "DeleteBook", `option (google.api.method_signature) = "path";`, "", "", testutils.Problems{}},
+		{"Missing", "DeleteBook", "", "", "", testutils.Problems{{Message: `(google.api.method_signature) = "path"`}}},
 		{
 			"Wrong",
 			"DeleteBook",
 			`option (google.api.method_signature) = "book";`,
 			"", "",
-			testutils.Problems{{Suggestion: `option (google.api.method_signature) = "name";`}},
+			testutils.Problems{{Suggestion: `option (google.api.method_signature) = "path";`}},
 		},
 		{"Irrelevant", "RemoveBook", "", "", "", testutils.Problems{}},
-		{"WithEtag", "DeleteBook", `option (google.api.method_signature) = "name,etag";`, "string etag = 2;", "", testutils.Problems{}},
-		{"WithForce", "DeleteBook", `option (google.api.method_signature) = "name,force";`, "", "bool force = 3;", testutils.Problems{}},
-		{"WithBoth", "DeleteBook", `option (google.api.method_signature) = "name,etag,force";`, "string etag = 2;", "bool force = 3;", testutils.Problems{}},
-		{"MissingNameWithBoth", "DeleteBook", `option (google.api.method_signature) = "etag,force";`, "string etag = 2;", "bool force = 3;", testutils.Problems{{Suggestion: `option (google.api.method_signature) = "name,etag,force";`}}},
+		{"WithEtag", "DeleteBook", `option (google.api.method_signature) = "path,etag";`, "string etag = 2;", "", testutils.Problems{}},
+		{"WithForce", "DeleteBook", `option (google.api.method_signature) = "path,force";`, "", "bool force = 3;", testutils.Problems{}},
+		{"WithBoth", "DeleteBook", `option (google.api.method_signature) = "path,etag,force";`, "string etag = 2;", "bool force = 3;", testutils.Problems{}},
+		{"MissingNameWithBoth", "DeleteBook", `option (google.api.method_signature) = "etag,force";`, "string etag = 2;", "bool force = 3;", testutils.Problems{{Suggestion: `option (google.api.method_signature) = "path,etag,force";`}}},
 	} {
 		t.Run(test.name, func(t *testing.T) {
 			f := testutils.ParseProto3Tmpl(t, `
@@ -60,7 +60,7 @@ func TestMethodSignature(t *testing.T) {
 			`, test)
 			m := f.GetServices()[0].GetMethods()[0]
 			if diff := test.problems.SetDescriptor(m).Diff(methodSignature.Lint(f)); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}

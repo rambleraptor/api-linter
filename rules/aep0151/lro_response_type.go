@@ -17,16 +17,17 @@ package aep0151
 import (
 	"strings"
 
-	"github.com/googleapis/api-linter/locations"
+	"github.com/aep-dev/api-linter/locations"
 
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 var lroResponse = &lint.MethodRule{
-	Name:   lint.NewRuleName(151, "lro-response-type"),
-	OnlyIf: isAnnotatedLRO,
+	Name:     lint.NewRuleName(151, "lro-response-type"),
+	RuleType: lint.NewRuleType(lint.MustRule),
+	OnlyIf:   isAnnotatedLRO,
 	LintMethod: func(m *desc.MethodDescriptor) []lint.Problem {
 		lro := utils.GetOperationInfo(m)
 

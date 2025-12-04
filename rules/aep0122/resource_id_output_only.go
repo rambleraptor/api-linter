@@ -15,9 +15,9 @@
 package aep0122
 
 import (
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 	"github.com/stoewer/go-strcase"
 	"google.golang.org/genproto/googleapis/api/annotations"
 )
@@ -26,7 +26,7 @@ var resourceIdOutputOnly = &lint.FieldRule{
 	Name: lint.NewRuleName(122, "resource-id-output-only"),
 	OnlyIf: func(f *desc.FieldDescriptor) bool {
 		var idName string
-		p := f.GetParent().(*desc.MessageDescriptor)
+		p, _ := f.GetParent().(*desc.MessageDescriptor)
 
 		// Build an expected ID field name based on the Resource `singular`
 		// field or by parsing the `type`.

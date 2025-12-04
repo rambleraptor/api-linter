@@ -18,24 +18,60 @@ import (
 	"strings"
 
 	"bitbucket.org/creachadair/stringset"
+	aepapi "buf.build/gen/go/aep/api/protocolbuffers/go/aep/api"
 	lrpb "cloud.google.com/go/longrunning/autogen/longrunningpb"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint/desc"
 	apb "google.golang.org/genproto/googleapis/api/annotations"
 	"google.golang.org/protobuf/proto"
 )
 
 // GetFieldBehavior returns a stringset.Set of FieldBehavior annotations for
-// the given field.
+// the given field. It checks both aep.api.field_behavior and aep.api.field_info.field_behavior.
 func GetFieldBehavior(f *desc.FieldDescriptor) stringset.Set {
 	opts := f.GetFieldOptions()
+	answer := stringset.New()
+
+	// Check aep.api.field_behavior extension
 	if x := proto.GetExtension(opts, apb.E_FieldBehavior); x != nil {
-		answer := stringset.New()
 		for _, fb := range x.([]apb.FieldBehavior) {
 			answer.Add(fb.String())
 		}
-		return answer
 	}
-	return nil
+
+	// Check aep.api.field_info.field_behavior extension
+	if x := proto.GetExtension(opts, aepapi.E_FieldInfo); x != nil {
+		fieldInfo := x.(*aepapi.FieldInfo)
+		for _, fb := range fieldInfo.GetFieldBehavior() {
+			// Convert aep.api.FieldBehavior to string
+			// The string representation needs to match the google.api format
+			answer.Add(convertAEPFieldBehaviorToString(fb))
+		}
+	}
+
+	return answer
+}
+
+// convertAEPFieldBehaviorToString converts aep.api.FieldBehavior to a string format
+// compatible with aep.api.FieldBehavior strings.
+func convertAEPFieldBehaviorToString(fb aepapi.FieldBehavior) string {
+	switch fb {
+	case aepapi.FieldBehavior_FIELD_BEHAVIOR_OPTIONAL:
+		return "OPTIONAL"
+	case aepapi.FieldBehavior_FIELD_BEHAVIOR_REQUIRED:
+		return "REQUIRED"
+	case aepapi.FieldBehavior_FIELD_BEHAVIOR_OUTPUT_ONLY:
+		return "OUTPUT_ONLY"
+	case aepapi.FieldBehavior_FIELD_BEHAVIOR_INPUT_ONLY:
+		return "INPUT_ONLY"
+	case aepapi.FieldBehavior_FIELD_BEHAVIOR_IMMUTABLE:
+		return "IMMUTABLE"
+	case aepapi.FieldBehavior_FIELD_BEHAVIOR_UNORDERED_LIST:
+		return "UNORDERED_LIST"
+	case aepapi.FieldBehavior_FIELD_BEHAVIOR_NON_EMPTY_DEFAULT:
+		return "NON_EMPTY_DEFAULT"
+	default:
+		return fb.String()
+	}
 }
 
 // GetOperationInfo returns the google.longrunning.operation_info annotation.
@@ -111,19 +147,19 @@ func GetMethodSignatures(m *desc.MethodDescriptor) [][]string {
 	return answer
 }
 
-// GetResource returns the google.api.resource annotation.
-func GetResource(m *desc.MessageDescriptor) *apb.ResourceDescriptor {
+// GetResource returns the aep.api.resource annotation.
+func GetResource(m *desc.MessageDescriptor) *aepapi.ResourceDescriptor {
 	if m == nil {
 		return nil
 	}
 	opts := m.GetMessageOptions()
-	if x := proto.GetExtension(opts, apb.E_Resource); x != nil {
-		return x.(*apb.ResourceDescriptor)
+	if x := proto.GetExtension(opts, aepapi.E_Resource); x != nil {
+		return x.(*aepapi.ResourceDescriptor)
 	}
 	return nil
 }
 
-// IsResource returns true if the message has a populated google.api.resource
+// IsResource returns true if the message has a populated aep.api.resource
 // annotation with a non-empty "type" field.
 func IsResource(m *desc.MessageDescriptor) bool {
 	if res := GetResource(m); res != nil {
@@ -149,7 +185,8 @@ func IsSingletonResource(m *desc.MessageDescriptor) bool {
 }
 
 // GetResourceDefinitions returns the google.api.resource_definition annotations
-// for a file.
+// for a file. Note: This still uses the Google API extension as AEP doesn't have
+// a file-level resource_definition extension yet.
 func GetResourceDefinitions(f *desc.FileDescriptor) []*apb.ResourceDescriptor {
 	opts := f.GetFileOptions()
 	if x := proto.GetExtension(opts, apb.E_ResourceDefinition); x != nil {
@@ -158,32 +195,76 @@ func GetResourceDefinitions(f *desc.FileDescriptor) []*apb.ResourceDescriptor {
 	return nil
 }
 
-// HasResourceReference returns if the field has a google.api.resource_reference annotation.
+// HasResourceReference returns if the field has a aep.api.field_info.resource_reference annotation.
 func HasResourceReference(f *desc.FieldDescriptor) bool {
 	if f == nil {
 		return false
 	}
-	return proto.HasExtension(f.GetFieldOptions(), apb.E_ResourceReference)
+	// Check aep.api.field_info.resource_reference
+	if x := proto.GetExtension(f.GetFieldOptions(), aepapi.E_FieldInfo); x != nil {
+		fieldInfo := x.(*aepapi.FieldInfo)
+		return len(fieldInfo.GetResourceReference()) > 0
+	}
+	return false
 }
 
-// GetResourceReference returns the google.api.resource_reference annotation.
-func GetResourceReference(f *desc.FieldDescriptor) *apb.ResourceReference {
+// ResourceReference contains resource reference information from aep.api.field_info annotations.
+type ResourceReference struct {
+	// Type is the resource types being referenced (from resource_reference field)
+	Type []string
+	// ChildType is the child resource types (from resource_reference_child_type field)
+	ChildType []string
+}
+
+// GetType returns the resource types.
+func (r *ResourceReference) GetType() []string {
+	if r == nil {
+		return nil
+	}
+	return r.Type
+}
+
+// GetChildType returns the child resource types.
+func (r *ResourceReference) GetChildType() []string {
+	if r == nil {
+		return nil
+	}
+	return r.ChildType
+}
+
+// GetResourceReference returns the aep.api.field_info.resource_reference annotation.
+func GetResourceReference(f *desc.FieldDescriptor) *ResourceReference {
 	if f == nil {
 		return nil
 	}
 	opts := f.GetFieldOptions()
-	if x := proto.GetExtension(opts, apb.E_ResourceReference); x != nil {
-		return x.(*apb.ResourceReference)
+
+	// Check aep.api.field_info.resource_reference
+	if x := proto.GetExtension(opts, aepapi.E_FieldInfo); x != nil {
+		fieldInfo := x.(*aepapi.FieldInfo)
+		resourceRefs := fieldInfo.GetResourceReference()
+		resourceRefChildTypes := fieldInfo.GetResourceReferenceChildType()
+
+		if len(resourceRefs) > 0 || len(resourceRefChildTypes) > 0 {
+			// Extract resource reference information from aep.api.FieldInfo
+			ref := &ResourceReference{
+				Type:      resourceRefs,
+				ChildType: resourceRefChildTypes,
+			}
+
+			return ref
+		}
 	}
+
 	return nil
 }
 
 // FindResource returns first resource of type matching the reference param.
 // resource Type name being referenced. It looks within a given file and its
 // depenedencies, it cannot search within the entire protobuf package.
-// This is especially useful for resolving google.api.resource_reference
+// This is especially useful for resolving aep.api.field_info.resource_reference
 // annotations.
-func FindResource(reference string, file *desc.FileDescriptor) *apb.ResourceDescriptor {
+func FindResource(reference string, file *desc.FileDescriptor) *aepapi.ResourceDescriptor {
 	m := FindResourceMessage(reference, file)
 	return GetResource(m)
 }
@@ -192,7 +273,7 @@ func FindResource(reference string, file *desc.FileDescriptor) *apb.ResourceDesc
 // matching the resource Type name being referenced. It looks within a given
 // file and its depenedencies, it cannot search within the entire protobuf
 // package. This is especially useful for resolving
-// google.api.resource_reference annotations to the message that owns a
+// aep.api.field_info.resource_reference annotations to the message that owns a
 // resource.
 func FindResourceMessage(reference string, file *desc.FileDescriptor) *desc.MessageDescriptor {
 	files := append(file.GetDependencies(), file)
@@ -225,7 +306,7 @@ func SplitResourceTypeName(typ string) (service string, typeName string, ok bool
 
 // FindResourceChildren attempts to search for other resources defined in the
 // package that are parented by the given resource.
-func FindResourceChildren(parent *apb.ResourceDescriptor, file *desc.FileDescriptor) []*apb.ResourceDescriptor {
+func FindResourceChildren(parent *aepapi.ResourceDescriptor, file *desc.FileDescriptor) []*aepapi.ResourceDescriptor {
 	pats := parent.GetPattern()
 	if len(pats) == 0 {
 		return nil
@@ -235,7 +316,7 @@ func FindResourceChildren(parent *apb.ResourceDescriptor, file *desc.FileDescrip
 	// 2. The true first pattern is the one most likely to be used as a parent.
 	first := pats[0]
 
-	var children []*apb.ResourceDescriptor
+	var children []*aepapi.ResourceDescriptor
 	files := append(file.GetDependencies(), file)
 	for _, f := range files {
 		for _, m := range f.GetMessageTypes() {

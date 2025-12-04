@@ -17,8 +17,8 @@ package aep0131
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/lint/desc"
 	"github.com/jhump/protoreflect/desc/builder"
 	fpb "google.golang.org/genproto/protobuf/field_mask"
 )
@@ -44,6 +44,7 @@ func TestUnknownFields(t *testing.T) {
 		{"Invalid", "GetBookRequest", "application_id", builder.FieldTypeString(), testutils.Problems{{
 			Message: "Unexpected field",
 		}}},
+		{"ShowDeleted", "GetBookRequest", "show_deleted", builder.FieldTypeBool(), testutils.Problems{}},
 		{"Irrelevant", "AcquireBookRequest", "application_id", builder.FieldTypeString(), testutils.Problems{}},
 	}
 
@@ -52,7 +53,7 @@ func TestUnknownFields(t *testing.T) {
 		t.Run(test.testName, func(t *testing.T) {
 			// Create an appropriate message descriptor.
 			message, err := builder.NewMessage(test.messageName).AddField(
-				builder.NewField("name", builder.FieldTypeString()),
+				builder.NewField("path", builder.FieldTypeString()),
 			).AddField(
 				builder.NewField(test.fieldName, test.fieldType),
 			).Build()
@@ -64,7 +65,7 @@ func TestUnknownFields(t *testing.T) {
 			wantProblems := test.problems.SetDescriptor(message.FindFieldByName(test.fieldName))
 			gotProblems := unknownFields.Lint(message.GetFile())
 			if diff := wantProblems.Diff(gotProblems); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}

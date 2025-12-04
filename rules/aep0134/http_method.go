@@ -15,8 +15,8 @@
 package aep0134
 
 import (
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
 )
 
 // Update methods should use the HTTP PATCH verb.
@@ -24,4 +24,5 @@ var httpMethod = &lint.MethodRule{
 	Name:       lint.NewRuleName(134, "http-method"),
 	OnlyIf:     utils.IsUpdateMethod,
 	LintMethod: utils.LintHTTPMethod("PATCH"),
+	RuleType:   lint.NewRuleType(lint.MustRule),
 }

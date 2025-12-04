@@ -17,12 +17,12 @@ package aep0132
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 )
 
 func TestResourceReferenceType(t *testing.T) {
 	bookResource := `
-option (google.api.resource) = {
+option (aep.api.resource) = {
 	type: "library.googleapis.com/Book"
 	pattern: "shelves/{shelf}/books/{book}"
 };
@@ -31,28 +31,28 @@ option (google.api.resource) = {
 	// Set up testing permutations.
 	tests := []struct {
 		testName           string
-		TypeName           string
-		RefType            string
+		Annotation         string
 		ResourceAnnotation string
 		problems           testutils.Problems
 	}{
-		{"ValidChildType", "library.googleapis.com/Book", "child_type", bookResource, nil},
-		{"ValidType", "library.googleapis.com/Shelf", "type", bookResource, nil},
-		{"InvalidType", "library.googleapis.com/Book", "type", bookResource, testutils.Problems{{Message: "not a `type`"}}},
-		{"InvalidChildType", "library.googleapis.com/Shelf", "child_type", bookResource, testutils.Problems{{Message: "`child_type`"}}},
-		{"SkipNonResource", "library.googleapis.com/Book", "child_type", "", nil},
+		{"ValidMatch_resource_reference", `resource_reference = "library.googleapis.com/Book"`, bookResource, nil},
+		{"InvalidMismatch_resource_reference", `resource_reference = "library.googleapis.com/Shelf"`, bookResource, testutils.Problems{{Message: "`resource_reference_child_type`"}}},
+		{"ValidMatch_resource_reference_child_type", `resource_reference_child_type = "library.googleapis.com/Book"`, bookResource, nil},
+		{"InvalidMismatch_resource_reference_child_type", `resource_reference_child_type = "library.googleapis.com/Shelf"`, bookResource, testutils.Problems{{Message: "`resource_reference_child_type`"}}},
+		{"SkipNoResource", `resource_reference = "library.googleapis.com/Book"`, "", nil},
 	}
 
 	// Run each test.
 	for _, test := range tests {
 		t.Run(test.testName, func(t *testing.T) {
 			file := testutils.ParseProto3Tmpl(t, `
-				import "google/api/resource.proto";
+				import "aep/api/resource.proto";
+  import "aep/api/field_info.proto";
 				service Library {
 					rpc ListBooks(ListBooksRequest) returns (ListBooksResponse) {}
 				}
 				message ListBooksRequest {
-					string parent = 1 [(google.api.resource_reference).{{ .RefType }} = "{{ .TypeName }}"];
+					string parent = 1 [(aep.api.field_info).{{ .Annotation }}];
 				}
 				message ListBooksResponse {
 					repeated string unreachable = 2;
@@ -60,7 +60,7 @@ option (google.api.resource) = {
 				}
 				message Book {
 					{{ .ResourceAnnotation }}
-					string name = 1;
+					string path = 1;
 				}
 			`, test)
 			field := file.GetServices()[0].GetMethods()[0].GetInputType().FindFieldByName("parent")

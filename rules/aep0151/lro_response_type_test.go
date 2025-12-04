@@ -17,7 +17,7 @@ package aep0151
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 )
 
 func TestLROResponse(t *testing.T) {
@@ -51,7 +51,7 @@ func TestLROResponse(t *testing.T) {
 			problems := lroResponse.Lint(f)
 			d := f.GetServices()[0].GetMethods()[0]
 			if diff := test.problems.SetDescriptor(d).Diff(problems); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}

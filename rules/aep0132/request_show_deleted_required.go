@@ -4,16 +4,17 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 	"github.com/stoewer/go-strcase"
 )
 
 // List requests should contain a show_deleted field if the resource supports
 // soft delete.
 var requestShowDeletedRequired = &lint.MessageRule{
-	Name: lint.NewRuleName(132, "request-show-deleted-required"),
+	Name:     lint.NewRuleName(132, "request-show-deleted-required"),
+	RuleType: lint.NewRuleType(lint.ShouldRule),
 	OnlyIf: func(m *desc.MessageDescriptor) bool {
 		if !utils.IsListRequestMessage(m) {
 			return false

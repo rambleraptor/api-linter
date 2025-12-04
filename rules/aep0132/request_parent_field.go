@@ -15,15 +15,16 @@
 package aep0132
 
 import (
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 // The type of the parent field in the List request message should
 // be string.
 var requestParentField = &lint.FieldRule{
-	Name: lint.NewRuleName(132, "request-parent-field"),
+	Name:     lint.NewRuleName(132, "request-parent-field"),
+	RuleType: lint.NewRuleType(lint.MustRule),
 	OnlyIf: func(f *desc.FieldDescriptor) bool {
 		return utils.IsListRequestMessage(f.GetOwner()) && f.GetName() == "parent"
 	},

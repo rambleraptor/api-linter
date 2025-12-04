@@ -15,8 +15,8 @@
 package aep0131
 
 import (
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
 )
 
 // Get messages should have a properly named Request message.
@@ -24,4 +24,5 @@ var requestMessageName = &lint.MethodRule{
 	Name:       lint.NewRuleName(131, "request-message-name"),
 	OnlyIf:     utils.IsGetMethod,
 	LintMethod: utils.LintMethodHasMatchingRequestName,
+	// TODO: Enable rule type once integration tests are fixed.
 }

@@ -17,21 +17,20 @@ package aep0164
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 )
 
 func TestRequestNameReference(t *testing.T) {
 	t.Run("Present", func(t *testing.T) {
 		f := testutils.ParseProto3String(t, `
-			import "google/api/resource.proto";
+			import "aep/api/resource.proto";
+  import "aep/api/field_info.proto";
 			message UndeleteBookRequest {
-				string name = 1 [(google.api.resource_reference) = {
-					type: "library.googleapis.com/Book"
-				}];
+				string name = 1 [(aep.api.field_info).resource_reference = "library.googleapis.com/Book"];
 			}
 		`)
 		if diff := (testutils.Problems{}).Diff(requestNameReference.Lint(f)); diff != "" {
-			t.Errorf(diff)
+			t.Error(diff)
 		}
 	})
 	t.Run("Absent", func(t *testing.T) {
@@ -40,19 +39,20 @@ func TestRequestNameReference(t *testing.T) {
 			FieldName string
 			problems  testutils.Problems
 		}{
-			{"Error", "name", testutils.Problems{{Message: "google.api.resource_reference"}}},
+			{"Error", "name", testutils.Problems{{Message: "(aep.api.field_info).resource_reference"}}},
 			{"Irrelevant", "something_else", testutils.Problems{}},
 		} {
 			t.Run(test.name, func(t *testing.T) {
 				f := testutils.ParseProto3Tmpl(t, `
-					import "google/api/resource.proto";
+					import "aep/api/resource.proto";
+  import "aep/api/field_info.proto";
 					message UndeleteBookRequest {
 						string {{.FieldName}} = 1;
 					}
 				`, test)
 				field := f.GetMessageTypes()[0].GetFields()[0]
 				if diff := test.problems.SetDescriptor(field).Diff(requestNameReference.Lint(f)); diff != "" {
-					t.Errorf(diff)
+					t.Error(diff)
 				}
 			})
 		}

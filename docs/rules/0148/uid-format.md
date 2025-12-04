@@ -11,7 +11,7 @@ redirect_from:
 # `uid` format annotation
 
 This rule encourages the use of the `UUID4` format annotation on the `uid`
-field, as mandated in [AEP-148][].
+field, as mandated in [AIP-148][].
 
 ## Details
 
@@ -26,12 +26,12 @@ This rule looks on for fields named `uid` and complains if it does not have the
 ```proto
 // Incorrect.
 message Book {
-  option (google.api.resource) = {
+  option (aep.api.resource) = {
     type: "library.googleapis.com/Book"
     pattern: "books/{book}"
   };
 
-  string name = 1 [(google.api.field_behavior) = IDENTIFIER];
+  string path = 1 [(aep.api.field_info).field_behavior = IDENTIFIER];
   string uid = 2; // missing (google.api.field_info).format = UUID4
 }
 ```
@@ -41,12 +41,12 @@ message Book {
 ```proto
 // Correct.
 message Book {
-  option (google.api.resource) = {
+  option (aep.api.resource) = {
     type: "library.googleapis.com/Book"
     pattern: "books/{book}"
   };
 
-  string name = 1 [(google.api.field_behavior) = IDENTIFIER];
+  string path = 1 [(aep.api.field_info).field_behavior = IDENTIFIER];
   string uid = 2 [(google.api.field_info).format = UUID4];
 }
 ```
@@ -59,12 +59,12 @@ comment explaining why.
 
 ```proto
 message Book {
-  option (google.api.resource) = {
+  option (aep.api.resource) = {
     type: "library.googleapis.com/Book"
     pattern: "books/{book}"
   };
 
-  string name = 1 [(google.api.field_behavior) = IDENTIFIER];
+  string path = 1 [(aep.api.field_info).field_behavior = IDENTIFIER];
 
   // (-- api-linter: core::0148::uid-format=disabled
   //     aep.dev/not-precedent: We need to do this because reasons. --)

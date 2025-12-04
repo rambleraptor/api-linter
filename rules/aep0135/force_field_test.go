@@ -17,7 +17,7 @@ package aep0135
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 )
 
 func TestForceField(t *testing.T) {
@@ -27,37 +27,37 @@ func TestForceField(t *testing.T) {
 		BoolField string
 		problems  testutils.Problems
 	}{
-		{"ValidWithChildren", `.type = "library.googleapis.com/Publisher"`, "force", nil},
-		{"ValidWithoutChildren", `.type = "library.googleapis.com/Book"`, "other", nil},
-		{"SkipIncorrectChildTypeReference", `.child_type = "library.googleapis.com/Publisher"`, "other", nil},
-		{"InvalidMissingForce", `.type = "library.googleapis.com/Publisher"`, "other", testutils.Problems{{Message: "bool force"}}},
+		{"ValidWithChildren", "library.googleapis.com/Publisher", "force", nil},
+		{"ValidWithoutChildren", "library.googleapis.com/Book", "other", nil},
+		{"InvalidMissingForce", "library.googleapis.com/Publisher", "other", testutils.Problems{{Message: "bool force"}}},
 	}
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			f := testutils.ParseProto3Tmpl(t, `
-				import "google/api/resource.proto";
+				import "aep/api/resource.proto";
+  import "aep/api/field_info.proto";
 
 				message Book {
-					option (google.api.resource) = {
+					option (aep.api.resource) = {
 						type: "library.googleapis.com/Book"
 						pattern: "publishers/{publisher}/books/{book}"
 					};
-	
-					string name = 1;
+
+					string path = 1;
 				}
 
 				message Publisher {
-					option (google.api.resource) = {
+					option (aep.api.resource) = {
 						type: "library.googleapis.com/Publisher"
 						pattern: "publishers/{publisher}"
 					};
-	
-					string name = 1;
+
+					string path = 1;
 				}
 
 				message DeleteResourceRequest {
-					string name = 1 [(google.api.resource_reference){{.Reference}}];
+					string path = 1 [(aep.api.field_info).resource_reference = "{{.Reference}}"];
 
 					bool {{.BoolField}} = 2;
 				}

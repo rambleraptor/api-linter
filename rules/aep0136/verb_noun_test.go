@@ -17,7 +17,7 @@ package aep0136
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 )
 
 func TestVerbNoun(t *testing.T) {
@@ -40,7 +40,7 @@ func TestVerbNoun(t *testing.T) {
 			method := file.GetServices()[0].GetMethods()[0]
 			got := verbNoun.Lint(file)
 			if diff := test.problems.SetDescriptor(method).Diff(got); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}

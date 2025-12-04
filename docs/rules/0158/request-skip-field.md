@@ -25,11 +25,11 @@ contains a `skip` field, and complains if the field is not a singular `int32`.
 ```proto
 message ListBooksRequest {
   string parent = 1 [
-    (google.api.resource_reference).child_type = "library.googleapis.com/Book",
-    (google.api.field_behavior) = REQUIRED
+    (aep.api.field_info).resource_reference_child_type = "library.googleapis.com/Book",
+    (aep.api.field_behavior) = FIELD_BEHAVIOR_REQUIRED
   ];
 
-  int32 page_size = 2;
+  int32 max_page_size = 2;
 
   string page_token = 3;
 
@@ -42,11 +42,11 @@ message ListBooksRequest {
 ```proto
 message ListBooksRequest {
   string parent = 1 [
-    (google.api.resource_reference).child_type = "library.googleapis.com/Book",
-    (google.api.field_behavior) = REQUIRED
+    (aep.api.field_info).resource_reference_child_type = "library.googleapis.com/Book",
+    (aep.api.field_behavior) = FIELD_BEHAVIOR_REQUIRED
   ];
 
-  int32 page_size = 2;
+  int32 max_page_size = 2;
 
   string page_token = 3;
 
@@ -62,11 +62,11 @@ Remember to also include an [aep.dev/not-precedent][] comment explaining why.
 ```proto
 message ListBooksRequest {
   string parent = 1 [
-    (google.api.resource_reference).child_type = "library.googleapis.com/Book",
-    (google.api.field_behavior) = REQUIRED
+    (aep.api.field_info).resource_reference_child_type = "library.googleapis.com/Book",
+    (aep.api.field_behavior) = FIELD_BEHAVIOR_REQUIRED
   ];
 
-  int32 page_size = 2;
+  int32 max_page_size = 2;
 
   string page_token = 3;
 

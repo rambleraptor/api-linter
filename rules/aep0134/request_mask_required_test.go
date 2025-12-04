@@ -17,7 +17,7 @@ package aep0134
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 )
 
 func TestRequestMaskFieldRequired(t *testing.T) {
@@ -42,7 +42,7 @@ func TestRequestMaskFieldRequired(t *testing.T) {
 			message := file.GetMessageTypes()[0]
 			problems := requestMaskRequired.Lint(file)
 			if diff := test.problems.SetDescriptor(message).Diff(problems); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}

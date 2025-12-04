@@ -17,9 +17,9 @@ package aep0135
 import (
 	"fmt"
 
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 // Delete methods should not have unrecognized fields.
@@ -29,7 +29,7 @@ var unknownFields = &lint.MessageRule{
 	LintMessage: func(m *desc.MessageDescriptor) (problems []lint.Problem) {
 		// Rule check: Establish that there are no unexpected fields.
 		allowedFields := map[string]struct{}{
-			"name":          {}, // AEP-135
+			"path":          {}, // AEP-135
 			"force":         {}, // AEP-135
 			"allow_missing": {}, // AEP-135
 			"etag":          {}, // AEP-154

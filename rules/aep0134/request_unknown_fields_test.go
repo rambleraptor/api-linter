@@ -16,8 +16,8 @@ package aep0134
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/lint/desc"
 	"github.com/jhump/protoreflect/desc/builder"
 	fpb "google.golang.org/genproto/protobuf/field_mask"
 )
@@ -46,6 +46,11 @@ func TestUnknownFields(t *testing.T) {
 		{
 			"ValidateOnly", "UpdateBigBookRequest", "validate_only",
 			builder.FieldTypeBool(),
+			testutils.Problems{},
+		},
+		{
+			"PathOnly", "UpdateBigBookRequest", "path",
+			builder.FieldTypeString(),
 			testutils.Problems{},
 		},
 		{
@@ -82,7 +87,7 @@ func TestUnknownFields(t *testing.T) {
 			wantProblems := test.problems.SetDescriptor(message.FindFieldByName(test.fieldName))
 			gotProblems := unknownFields.Lint(message.GetFile())
 			if diff := wantProblems.Diff(gotProblems); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}

@@ -15,21 +15,22 @@
 package aep0132
 
 import (
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/locations"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
-	"google.golang.org/genproto/googleapis/api/annotations"
+	aepapi "buf.build/gen/go/aep/api/protocolbuffers/go/aep/api"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/locations"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 // List methods should reference the target resource via `child_type` or the
 // parent directly via `type`.
 var resourceReferenceType = &lint.MethodRule{
-	Name: lint.NewRuleName(132, "resource-reference-type"),
+	Name:     lint.NewRuleName(132, "resource-reference-type"),
+	RuleType: lint.NewRuleType(lint.MustRule),
 	OnlyIf: func(m *desc.MethodDescriptor) bool {
 		p := m.GetInputType().FindFieldByName("parent")
 
-		var resource *annotations.ResourceDescriptor
+		var resource *aepapi.ResourceDescriptor
 		resourceField := utils.GetListResourceMessage(m)
 		if resourceField != nil {
 			resource = utils.GetResource(resourceField)
@@ -44,19 +45,30 @@ var resourceReferenceType = &lint.MethodRule{
 		parent := m.GetInputType().FindFieldByName("parent")
 		ref := utils.GetResourceReference(parent)
 
-		if resource.GetType() == ref.GetType() {
-			return []lint.Problem{{
-				Message:    "List should use a `child_type` reference to the paginated resource, not a `type` reference.",
-				Descriptor: parent,
-				Location:   locations.FieldResourceReference(parent),
-			}}
-		}
-		if ref.GetChildType() != "" && resource.GetType() != ref.GetChildType() {
-			return []lint.Problem{{
-				Message:    "List should use a `child_type` reference to the paginated resource.",
-				Descriptor: parent,
-				Location:   locations.FieldResourceReference(parent),
-			}}
+		// Check resource reference matches the child resource type.
+		// In AEP format, use resource_reference_child_type to reference the child resource.
+		// For backwards compatibility, resource_reference (type) is also supported.
+		childTypes := ref.GetChildType()
+		types := ref.GetType()
+
+		if len(childTypes) > 0 {
+			// AEP format with resource_reference_child_type
+			if resource.GetType() != childTypes[0] {
+				return []lint.Problem{{
+					Message:    "List should use `resource_reference_child_type` to reference the paginated resource.",
+					Descriptor: parent,
+					Location:   locations.FieldResourceReference(parent),
+				}}
+			}
+		} else if len(types) > 0 {
+			// AEP format with resource_reference only (backwards compatibility)
+			if resource.GetType() != types[0] {
+				return []lint.Problem{{
+					Message:    "List should use `resource_reference_child_type` to reference the paginated resource.",
+					Descriptor: parent,
+					Location:   locations.FieldResourceReference(parent),
+				}}
+			}
 		}
 
 		return nil

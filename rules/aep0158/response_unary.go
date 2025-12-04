@@ -15,14 +15,15 @@
 package aep0158
 
 import (
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/locations"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/locations"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 var responseUnary = &lint.MethodRule{
-	Name:   lint.NewRuleName(158, "response-unary"),
-	OnlyIf: isPaginatedMethod,
+	Name:     lint.NewRuleName(158, "response-unary"),
+	RuleType: lint.NewRuleType(lint.MustRule),
+	OnlyIf:   isPaginatedMethod,
 	LintMethod: func(m *desc.MethodDescriptor) []lint.Problem {
 		if m.IsServerStreaming() {
 			return []lint.Problem{{

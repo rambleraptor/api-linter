@@ -17,16 +17,17 @@ package aep0134
 import (
 	"fmt"
 
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/locations"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/locations"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 	"github.com/stoewer/go-strcase"
 )
 
 // The resource field in a update method should named properly.
 var requestResourceField = &lint.FieldRule{
-	Name: lint.NewRuleName(134, "request-resource-field"),
+	Name:     lint.NewRuleName(134, "request-resource-field"),
+	RuleType: lint.NewRuleType(lint.MustRule),
 	OnlyIf: func(f *desc.FieldDescriptor) bool {
 		message := f.GetOwner()
 		return utils.IsUpdateRequestMessage(message) &&

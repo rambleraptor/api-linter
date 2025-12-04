@@ -15,17 +15,17 @@
 package aep0132
 
 import (
-	"strings"
-
 	"bitbucket.org/creachadair/stringset"
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 // The resource itself is not included here, but also permitted.
 // This is covered in code in the rule itself.
 var respAllowedFields = stringset.New(
+	"results",
+	"max_page_size",         // AEP-132
 	"next_page_token",       // AEP-158
 	"total_size",            // AEP-132
 	"unreachable",           // AEP-217
@@ -33,25 +33,12 @@ var respAllowedFields = stringset.New(
 )
 
 var responseUnknownFields = &lint.FieldRule{
-	Name: lint.NewRuleName(132, "response-unknown-fields"),
+	Name:     lint.NewRuleName(132, "response-unknown-fields"),
+	RuleType: lint.NewRuleType(lint.MustRule),
 	OnlyIf: func(f *desc.FieldDescriptor) bool {
 		return utils.IsListResponseMessage(f.GetOwner())
 	},
 	LintField: func(f *desc.FieldDescriptor) []lint.Problem {
-		// A repeated variant of the resource should be permitted.
-		resource := utils.ListResponseResourceName(f.GetOwner())
-		if strings.HasSuffix(resource, "_revisions") {
-			// This is an AEP-162 ListFooRevisions response, which is subtly
-			// different from an AEP-132 List response. We need to modify the RPC
-			// name to what the AEP-132 List response would be in order to permit
-			// the resource field properly.
-			resource = utils.ToPlural(strings.TrimSuffix(resource, "_revisions"))
-		}
-		if f.GetName() == resource {
-			return nil
-		}
-
-		// It is not the resource field; check it against the whitelist.
 		if !respAllowedFields.Contains(f.GetName()) {
 			return []lint.Problem{{
 				Message:    "List responses should only contain fields explicitly described in AEPs.",

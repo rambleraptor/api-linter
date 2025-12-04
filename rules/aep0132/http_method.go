@@ -15,13 +15,14 @@
 package aep0132
 
 import (
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
 )
 
 // List methods should use the HTTP GET verb.
 var httpMethod = &lint.MethodRule{
 	Name:       lint.NewRuleName(132, "http-method"),
+	RuleType:   lint.NewRuleType(lint.MustRule),
 	OnlyIf:     utils.IsListMethod,
 	LintMethod: utils.LintHTTPMethod("GET"),
 }

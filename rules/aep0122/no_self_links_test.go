@@ -17,7 +17,7 @@ package aep0122
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 )
 
 func TestNoSelfLinks(t *testing.T) {
@@ -31,9 +31,9 @@ func TestNoSelfLinks(t *testing.T) {
 	} {
 		t.Run(test.name, func(t *testing.T) {
 			f := testutils.ParseProto3Tmpl(t, `
-			import "google/api/resource.proto";
+			import "aep/api/resource.proto";
 			message Book {
-				option (google.api.resource) = {
+				option (aep.api.resource) = {
 					type: "library.googleapis.com/Book"
 				};
 				string name = 1;
@@ -43,7 +43,7 @@ func TestNoSelfLinks(t *testing.T) {
 		`, test)
 			field := f.GetMessageTypes()[0].GetFields()[1]
 			if diff := test.problems.SetDescriptor(field).Diff(noSelfLinks.Lint(f)); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}

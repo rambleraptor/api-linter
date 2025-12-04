@@ -17,7 +17,7 @@ package aep0131
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 )
 
 func TestHttpBody(t *testing.T) {
@@ -39,7 +39,7 @@ func TestHttpBody(t *testing.T) {
 				service Library {
 					rpc {{.MethodName}}({{.MethodName}}Request) returns (Book) {
 						option (google.api.http) = {
-							get: "/v1/{name=publishers/*/book/*}"
+							get: "/v1/{path=publishers/*/book/*}"
 							body: "{{.Body}}"
 						};
 					}

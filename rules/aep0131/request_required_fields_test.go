@@ -17,8 +17,8 @@ package aep0131
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 func TestRequiredFieldTests(t *testing.T) {
@@ -36,13 +36,13 @@ func TestRequiredFieldTests(t *testing.T) {
 		},
 		{
 			"ValidOptionalReadMask",
-			"google.protobuf.FieldMask read_mask = 2 [(google.api.field_behavior) = OPTIONAL];",
+			"google.protobuf.FieldMask read_mask = 2 [(aep.api.field_info).field_behavior = FIELD_BEHAVIOR_OPTIONAL];",
 			"read_mask",
 			nil,
 		},
 		{
 			"InvalidRequiredReadMask",
-			"google.protobuf.FieldMask read_mask = 2 [(google.api.field_behavior) = REQUIRED];",
+			"google.protobuf.FieldMask read_mask = 2 [(aep.api.field_info).field_behavior = FIELD_BEHAVIOR_REQUIRED];",
 			"read_mask",
 			testutils.Problems{
 				{Message: `Get RPCs must only require fields explicitly described in AEPs, not "read_mask"`},
@@ -50,7 +50,7 @@ func TestRequiredFieldTests(t *testing.T) {
 		},
 		{
 			"InvalidRequiredUnknownField",
-			"bool create_iam = 3 [(google.api.field_behavior) = REQUIRED];",
+			"bool create_iam = 3 [(aep.api.field_info).field_behavior = FIELD_BEHAVIOR_REQUIRED];",
 			"create_iam",
 			testutils.Problems{
 				{Message: `Get RPCs must only require fields explicitly described in AEPs, not "create_iam"`},
@@ -60,36 +60,34 @@ func TestRequiredFieldTests(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			f := testutils.ParseProto3Tmpl(t, `
 				import "google/api/annotations.proto";
-				import "google/api/field_behavior.proto";
-				import "google/api/resource.proto";
+				import "aep/api/field_info.proto";
+				import "aep/api/resource.proto";
 				import "google/protobuf/field_mask.proto";
 
 				service Library {
 					rpc GetBook(GetBookRequest) returns (Book) {
 						option (google.api.http) = {
-							get: "/v1/{name=publishers/*/books/*}"
+							get: "/v1/{path=publishers/*/books/*}"
 						};
 					}
 				}
 
 				message GetBookRequest {
-					// The name of the book to retrieve.
+					// The path of the book to retrieve.
 					// Format: publishers/{publisher}/books/{book}
-					string name = 1 [
-					    (google.api.field_behavior) = REQUIRED,
-						(google.api.resource_reference) = {
-							type: "library.googleapis.com/Book"
-						}
+					string path = 1 [
+					    (aep.api.field_info).field_behavior = FIELD_BEHAVIOR_REQUIRED,
+						(aep.api.field_info).resource_reference = "library.googleapis.com/Book"
 					];
 					{{.Fields}}
 				}
 
 				message Book {
-					option (google.api.resource) = {
+					option (aep.api.resource) = {
 						type: "library.googleapis.com/Book"
 						pattern: "publishers/{publisher}/books/{book}"
 					};
-					string name = 1;
+					string path = 1;
 				}
 			`, test)
 			var dbr desc.Descriptor = f.FindMessage("GetBookRequest")
@@ -97,7 +95,7 @@ func TestRequiredFieldTests(t *testing.T) {
 				dbr = f.FindMessage("GetBookRequest").FindFieldByName(test.problematicFieldName)
 			}
 			if diff := test.problems.SetDescriptor(dbr).Diff(requestRequiredFields.Lint(f)); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}

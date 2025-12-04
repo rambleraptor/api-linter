@@ -15,8 +15,8 @@
 package aep0131
 
 import (
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
 )
 
 // Get methods should not have an HTTP body.
@@ -24,4 +24,5 @@ var httpBody = &lint.MethodRule{
 	Name:       lint.NewRuleName(131, "http-body"),
 	OnlyIf:     utils.IsGetMethod,
 	LintMethod: utils.LintNoHTTPBody,
+	RuleType:   lint.NewRuleType(lint.MustRule),
 }

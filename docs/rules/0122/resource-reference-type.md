@@ -10,12 +10,12 @@ redirect_from:
 
 # Resource reference type
 
-This rule enforces that all fields with the `google.api.resource_reference`
+This rule enforces that all fields with the `(aep.api.field_info).resource_reference`
 annotation are strings, as mandated in [AEP-122][].
 
 ## Details
 
-This rule complains if it sees a field with a `google.api.resource_reference`
+This rule complains if it sees a field with a `(aep.api.field_info).resource_reference`
 that has a type other than `string`.
 
 ## Examples
@@ -25,12 +25,10 @@ that has a type other than `string`.
 ```proto
 // Incorrect.
 message Book {
-  string name = 1;
+  string path = 1;
 
   // Resource references should be strings.
-  Author author = 2 [(google.api.resource_reference) = {
-    type: "library.googleapis.com/Author"
-  }];
+  Author author = 2 [(aep.api.field_info).resource_reference = "library.googleapis.com/Author"];
 }
 ```
 
@@ -39,18 +37,16 @@ message Book {
 ```proto
 // Correct.
 message Book {
-  string name = 1;
+  string path = 1;
 
-  string author = 2 [(google.api.resource_reference) = {
-    type: "library.googleapis.com/Author"
-  }];
+  string author = 2 [(aep.api.field_info).resource_reference = "library.googleapis.com/Author"];
 }
 ```
 
 ```proto
 // Correct.
 message Book {
-  string name = 1;
+  string path = 1;
 
   // If "author" is not a first-class resource, then it may be a composite
   // field within the book.
@@ -65,13 +61,11 @@ Remember to also include an [aep.dev/not-precedent][] comment explaining why.
 
 ```proto
 message Book {
-  string name = 1;
+  string path = 1;
 
   // (-- api-linter: core::0122::resource-reference-type=disabled
   //     aep.dev/not-precedent: We need to do this because reasons. --)
-  Author author = 2 [(google.api.resource_reference) = {
-    type: "library.googleapis.com/Author"
-  }];
+  Author author = 2 [(aep.api.field_info).resource_reference = "library.googleapis.com/Author"];
 }
 ```
 

@@ -19,16 +19,17 @@ import (
 
 	"bitbucket.org/creachadair/stringset"
 
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 var allowedFields = stringset.New(
-	"name",       // AEP-131
-	"request_id", // AEP-155
-	"read_mask",  // AEP-157
-	"view",       // AEP-157
+	"path",         // AEP-131
+	"request_id",   // AEP-155
+	"read_mask",    // AEP-157
+	"view",         // AEP-157
+	"show_deleted", // AEP-164
 )
 
 // Get methods should not have unrecognized fields.
@@ -37,6 +38,7 @@ var unknownFields = &lint.FieldRule{
 	OnlyIf: func(f *desc.FieldDescriptor) bool {
 		return utils.IsGetRequestMessage(f.GetOwner())
 	},
+	RuleType: lint.NewRuleType(lint.MustRule),
 	LintField: func(field *desc.FieldDescriptor) []lint.Problem {
 		if !allowedFields.Contains(field.GetName()) {
 			return []lint.Problem{{

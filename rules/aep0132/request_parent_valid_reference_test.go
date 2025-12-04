@@ -17,7 +17,7 @@ package aep0132
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 )
 
 func TestRequestParentValidReference(t *testing.T) {
@@ -26,16 +26,14 @@ func TestRequestParentValidReference(t *testing.T) {
 		ReferenceType string
 		problems      testutils.Problems
 	}{
-		{"Valid", "type: \"library.googleapis.com/Publisher\"", testutils.Problems{}},
-		{"Invalid", "type: \"library.googleapis.com/Book\"", testutils.Problems{{Message: "reference the parent(s)"}}},
-		{"IgnoreChildType", "child_type: \"library.googleapis.com/Book\"", testutils.Problems{}},
+		{"Valid", "library.googleapis.com/Publisher", testutils.Problems{}},
+		{"Invalid", "library.googleapis.com/Book", testutils.Problems{{Message: "reference the parent(s)"}}},
 	} {
 		f := testutils.ParseProto3Tmpl(t, `
-			import "google/api/resource.proto";
+			import "aep/api/resource.proto";
+  import "aep/api/field_info.proto";
 			message ListBooksRequest {
-				string parent = 1 [(google.api.resource_reference) = {
-					{{.ReferenceType}}
-				}];
+				string parent = 1 [(aep.api.field_info).resource_reference = "{{.ReferenceType}}"];
 			}
 
 			message ListBooksResponse {
@@ -43,17 +41,17 @@ func TestRequestParentValidReference(t *testing.T) {
 			}
 
 			message Book {
-				option (google.api.resource) = {
+				option (aep.api.resource) = {
 					type: "library.googleapis.com/Book"
 					pattern: "publishers/{publisher}/books/{book}"
 				};
 
-				string name = 1;
+				string path = 1;
 			}
 		`, test)
 		field := f.GetMessageTypes()[0].GetFields()[0]
 		if diff := test.problems.SetDescriptor(field).Diff(requestParentValidReference.Lint(f)); diff != "" {
-			t.Errorf(diff)
+			t.Error(diff)
 		}
 	}
 }

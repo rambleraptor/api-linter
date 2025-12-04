@@ -17,7 +17,7 @@ package aep0134
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 )
 
 func TestResponseMessageName(t *testing.T) {
@@ -63,7 +63,7 @@ func TestResponseMessageName(t *testing.T) {
 			problems := responseMessageName.Lint(file)
 			method := file.GetServices()[0].GetMethods()[0]
 			if diff := test.problems.SetDescriptor(method).Diff(problems); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}

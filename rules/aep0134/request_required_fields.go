@@ -18,20 +18,21 @@ import (
 	"fmt"
 
 	"bitbucket.org/creachadair/stringset"
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 // The update request message should not have unrecognized fields.
 var requestRequiredFields = &lint.MethodRule{
-	Name:   lint.NewRuleName(134, "request-required-fields"),
-	OnlyIf: utils.IsUpdateMethod,
+	Name:     lint.NewRuleName(134, "request-required-fields"),
+	RuleType: lint.NewRuleType(lint.MustRule),
+	OnlyIf:   utils.IsUpdateMethod,
 	LintMethod: func(m *desc.MethodDescriptor) (problems []lint.Problem) {
 		ot := utils.GetResponseType(m)
 		it := m.GetInputType()
 
-		allowedRequiredFields := stringset.New("update_mask")
+		allowedRequiredFields := stringset.New("update_mask", "path")
 
 		for _, f := range it.GetFields() {
 			if !utils.GetFieldBehavior(f).Contains("REQUIRED") {

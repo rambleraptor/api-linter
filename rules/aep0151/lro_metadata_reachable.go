@@ -15,14 +15,15 @@
 package aep0151
 
 import (
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 var lroMetadataReachable = &lint.MethodRule{
-	Name:   lint.NewRuleName(151, "lro-metadata-reachable"),
-	OnlyIf: isAnnotatedLRO,
+	Name:     lint.NewRuleName(151, "lro-metadata-reachable"),
+	RuleType: lint.NewRuleType(lint.MustRule),
+	OnlyIf:   isAnnotatedLRO,
 	LintMethod: func(m *desc.MethodDescriptor) (problems []lint.Problem) {
 		// See lro_response_reachable.go for `checkReachable` method.
 		return checkReachable(m, utils.GetOperationInfo(m).GetMetadataType())

@@ -30,13 +30,12 @@ message ListBooksRequest {
 	// The parent, which owns this collection of books.
 	// Format: publishers/{publisher}
 	string parent = 1 [
-	    (google.api.field_behavior) = REQUIRED,
-	    (google.api.resource_reference) = {
-	  		child_type: "library.googleapis.com/Book"
-	    }];
+	    (aep.api.field_behavior) = FIELD_BEHAVIOR_REQUIRED,
+	    (aep.api.field_info).resource_reference_child_type = "library.googleapis.com/Book"
+	];
 
   // Non-standard required field.
-  int32 page_size = 2 [(google.api.field_behavior) = REQUIRED]
+  int32 page_size = 2 [(aep.api.field_info).field_behavior = FIELD_BEHAVIOR_REQUIRED]
 }
 ```
 
@@ -48,12 +47,11 @@ message ListBooksRequest {
 	// The parent, which owns this collection of books.
 	// Format: publishers/{publisher}
 	string parent = 1 [
-	    (google.api.field_behavior) = REQUIRED,
-	    (google.api.resource_reference) = {
-	  		child_type: "library.googleapis.com/Book"
-	    }];
+	    (aep.api.field_behavior) = FIELD_BEHAVIOR_REQUIRED,
+	    (aep.api.field_info).resource_reference_child_type = "library.googleapis.com/Book"
+	];
 
-  int32 page_size = 2 [(google.api.field_behavior) = OPTIONAL]
+  int32 page_size = 2 [(aep.api.field_info).field_behavior = OPTIONAL]
 }
 ```
 
@@ -67,15 +65,14 @@ message ListBooksRequest {
 	// The parent, which owns this collection of books.
 	// Format: publishers/{publisher}
 	string parent = 1 [
-	    (google.api.field_behavior) = REQUIRED,
-	    (google.api.resource_reference) = {
-	  		child_type: "library.googleapis.com/Book"
-	    }];
+	    (aep.api.field_behavior) = FIELD_BEHAVIOR_REQUIRED,
+	    (aep.api.field_info).resource_reference_child_type = "library.googleapis.com/Book"
+	];
 
   // (-- api-linter: core::0132::request-required-fields=disabled
   //     aep.dev/not-precedent: We really need this field to be required because
   // reasons. --)
-  int32 page_size = 2 [(google.api.field_behavior) = REQUIRED]
+  int32 page_size = 2 [(aep.api.field_info).field_behavior = FIELD_BEHAVIOR_REQUIRED]
 }
 ```
 

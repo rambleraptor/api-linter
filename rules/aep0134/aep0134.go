@@ -18,7 +18,7 @@ package aep0134
 import (
 	"strings"
 
-	"github.com/googleapis/api-linter/lint"
+	"github.com/aep-dev/api-linter/lint"
 	"github.com/stoewer/go-strcase"
 )
 
@@ -36,6 +36,7 @@ func AddRules(r lint.RuleRegistry) error {
 		requestMaskField,
 		requestMaskRequired,
 		requestMessageName,
+		requestPathRequired,
 		requestRequiredFields,
 		requestResourceField,
 		requestResourceRequired,

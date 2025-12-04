@@ -17,15 +17,16 @@ package aep0136
 import (
 	"strings"
 
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/locations"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/locations"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 var httpMethod = &lint.MethodRule{
-	Name:   lint.NewRuleName(136, "http-method"),
-	OnlyIf: isCustomMethod,
+	Name:     lint.NewRuleName(136, "http-method"),
+	RuleType: lint.NewRuleType(lint.ShouldRule),
+	OnlyIf:   isCustomMethod,
 	LintMethod: func(m *desc.MethodDescriptor) []lint.Problem {
 		// DeleteFooRevision is still a custom method, but delete is expected
 		// (enforced in AEP-162 rules).

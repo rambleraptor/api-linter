@@ -17,8 +17,8 @@ package aep0133
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/lint/desc"
 	"github.com/jhump/protoreflect/desc/builder"
 )
 
@@ -55,7 +55,7 @@ func TestUnknownFields(t *testing.T) {
 			"CreateBookRequest",
 			[]field{
 				{"book", builder.FieldTypeMessage(builder.NewMessage("Book"))},
-				{"book_id", builder.FieldTypeString()},
+				{"id", builder.FieldTypeString()},
 			},
 			testutils.Problems{},
 			nil,
@@ -63,7 +63,7 @@ func TestUnknownFields(t *testing.T) {
 		{
 			"ResourceRelatedField",
 			"CreateBookStoreRequest",
-			[]field{{"book_store_id", builder.FieldTypeString()}},
+			[]field{{"id", builder.FieldTypeString()}},
 			testutils.Problems{},
 			nil,
 		},
@@ -125,7 +125,7 @@ func TestUnknownFields(t *testing.T) {
 			// Run the lint rule, and establish that it returns the correct problems.
 			problems := unknownFields.Lint(message.GetFile())
 			if diff := test.problems.SetDescriptor(problemDesc).Diff(problems); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}

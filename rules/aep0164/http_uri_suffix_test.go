@@ -17,7 +17,7 @@ package aep0164
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 )
 
 func TestHttpUriSuffix(t *testing.T) {
@@ -52,7 +52,7 @@ func TestHttpUriSuffix(t *testing.T) {
 			// Run the method, ensure we get what we expect.
 			problems := httpURISuffix.Lint(file)
 			if diff := test.problems.SetDescriptor(file.GetServices()[0].GetMethods()[0]).Diff(problems); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}

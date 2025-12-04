@@ -15,12 +15,13 @@
 package aep0158
 
 import (
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
 )
 
 var responsePaginationNextPageToken = &lint.MessageRule{
 	Name:        lint.NewRuleName(158, "response-next-page-token-field"),
+	RuleType:    lint.NewRuleType(lint.MustRule),
 	OnlyIf:      isPaginatedResponseMessage,
 	LintMessage: utils.LintFieldPresentAndSingularString("next_page_token"),
 }

@@ -18,15 +18,16 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/locations"
-	"github.com/googleapis/api-linter/rules/internal/data"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/locations"
+	"github.com/aep-dev/api-linter/rules/internal/data"
+	"github.com/aep-dev/api-linter/lint/desc"
 	"github.com/stoewer/go-strcase"
 )
 
 var noPrepositions = &lint.MethodRule{
-	Name: lint.NewRuleName(136, "prepositions"),
+	Name:     lint.NewRuleName(136, "prepositions"),
+	RuleType: lint.NewRuleType(lint.MustRule),
 	LintMethod: func(m *desc.MethodDescriptor) (problems []lint.Problem) {
 		for _, word := range strings.Split(strcase.SnakeCase(m.GetName()), "_") {
 			if data.Prepositions.Contains(word) {

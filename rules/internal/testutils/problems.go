@@ -17,9 +17,9 @@ package testutils
 import (
 	"strings"
 
+	"github.com/aep-dev/api-linter/lint"
 	"github.com/google/go-cmp/cmp"
-	"github.com/googleapis/api-linter/lint"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 // Problems is a slice of individual Problem objects.

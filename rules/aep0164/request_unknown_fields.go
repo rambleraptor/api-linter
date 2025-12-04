@@ -17,8 +17,8 @@ package aep0164
 import (
 	"fmt"
 
-	"github.com/googleapis/api-linter/lint"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 // Undelete methods should not have unrecognized fields.

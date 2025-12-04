@@ -18,13 +18,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint/desc"
 	"github.com/jhump/protoreflect/desc/protoparse"
 	"github.com/lithammer/dedent"
 
 	// These imports cause the common protos to be registered with
 	// the protocol buffer registry, and therefore make the call to
 	// `proto.FileDescriptor` work for the imported files.
+	_ "buf.build/gen/go/aep/api/protocolbuffers/go/aep/api"
 	_ "cloud.google.com/go/longrunning/autogen/longrunningpb"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 )

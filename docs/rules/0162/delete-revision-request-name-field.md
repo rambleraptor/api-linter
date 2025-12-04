@@ -33,8 +33,8 @@ message DeleteBookRevisionRequest {}
 message DeleteBookRevisionRequest {
   // Field type should be `string`.
   bytes name = 1 [
-    (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference).type = "library.googleapis.com/Book"
+    (aep.api.field_behavior) = FIELD_BEHAVIOR_REQUIRED,
+    (aep.api.field_info).resource_reference = "library.googleapis.com/Book"
   ];
 }
 ```
@@ -45,8 +45,8 @@ message DeleteBookRevisionRequest {
 // Correct.
 message DeleteBookRevisionRequest {
   string name = 1 [
-    (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference).type = "library.googleapis.com/Book"
+    (aep.api.field_behavior) = FIELD_BEHAVIOR_REQUIRED,
+    (aep.api.field_info).resource_reference = "library.googleapis.com/Book"
   ];
 }
 ```
@@ -62,8 +62,8 @@ message DeleteBookRevisionRequest {
   // (-- api-linter: core::0162::delete-revision-request-name-field=disabled
   //     aep.dev/not-precedent: We need to do this because reasons. --)
   bytes name = 1 [
-    (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference).type = "library.googleapis.com/Book"
+    (aep.api.field_behavior) = FIELD_BEHAVIOR_REQUIRED,
+    (aep.api.field_info).resource_reference = "library.googleapis.com/Book"
   ];
 }
 ```

@@ -30,19 +30,19 @@ file:
 // Incorrect.
 // Services should appear before messages.
 message Book {
-  string name = 1;
+  string path = 1;
 }
 
 service Library {
   rpc GetBook(GetBookRequest) returns (Book) {
     option (google.api.http) = {
-      get: "/v1/{name=publishers/*/books/*}"
+      get: "/v1/{path=publishers/*/books/*}"
     };
   }
 }
 
 message GetBookRequest {
-  string name = 1;
+  string path = 1;
 }
 ```
 
@@ -53,17 +53,17 @@ message GetBookRequest {
 service Library {
   rpc GetBook(GetBookRequest) returns (Book) {
     option (google.api.http) = {
-      get: "/v1/{name=publishers/*/books/*}"
+      get: "/v1/{path=publishers/*/books/*}"
     };
   }
 }
 
 message Book {
-  string name = 1;
+  string path = 1;
 }
 
 message GetBookRequest {
-  string name = 1;
+  string path = 1;
 }
 ```
 
@@ -80,19 +80,19 @@ syntax = "proto3";
 import "google/api/anotations.proto";
 
 message Book {
-  string name = 1;
+  string path = 1;
 }
 
 service Library {
   rpc GetBook(GetBookRequest) returns (Book) {
     option (google.api.http) = {
-      get: "/v1/{name=publishers/*/books/*}"
+      get: "/v1/{path=publishers/*/books/*}"
     };
   }
 }
 
 message GetBookRequest {
-  string name = 1;
+  string path = 1;
 }
 ```
 

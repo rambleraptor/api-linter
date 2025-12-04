@@ -17,8 +17,8 @@ package aep0132
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/lint/desc"
 	"github.com/jhump/protoreflect/desc/builder"
 	fpb "google.golang.org/genproto/protobuf/field_mask"
 )
@@ -38,7 +38,7 @@ func TestUnknownFields(t *testing.T) {
 		fieldType   *builder.FieldType
 		problems    testutils.Problems
 	}{
-		{"PageSize", "ListBooksRequest", "page_size", builder.FieldTypeInt32(), testutils.Problems{}},
+		{"PageSize", "ListBooksRequest", "max_page_size", builder.FieldTypeInt32(), testutils.Problems{}},
 		{"PageToken", "ListBooksRequest", "page_token", builder.FieldTypeString(), testutils.Problems{}},
 		{"Skip", "ListBooksRequest", "skip", builder.FieldTypeInt32(), testutils.Problems{}},
 		{"Filter", "ListBooksRequest", "filter", builder.FieldTypeString(), testutils.Problems{}},
@@ -69,7 +69,7 @@ func TestUnknownFields(t *testing.T) {
 			// number of problems.
 			problems := unknownFields.Lint(message.GetFile())
 			if diff := test.problems.SetDescriptor(message.GetFields()[1]).Diff(problems); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}

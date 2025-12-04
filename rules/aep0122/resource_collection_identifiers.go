@@ -17,12 +17,11 @@ package aep0122
 import (
 	"regexp"
 	"strings"
-	"unicode"
 
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/locations"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/locations"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 var firstCharRegexp = regexp.MustCompile(`^[a-z]`)
@@ -46,12 +45,21 @@ var resourceCollectionIdentifiers = &lint.MessageRule{
 
 			segs := strings.Split(p, "/")
 			for _, seg := range segs {
-				// Get first rune of each pattern segment.
-				c := []rune(seg)[0]
-
-				if unicode.IsLetter(c) && unicode.IsUpper(c) {
+				if strings.HasPrefix(seg, "{") && strings.HasSuffix(seg, "}") {
+					// Variable segments can contain underscores, but must be lowercase
+					varName := seg[1 : len(seg)-1] // Remove { and }
+					if HasUpper(varName) {
+						problems = append(problems, lint.Problem{
+							Message:    "Resource pattern variables must be lowercase.",
+							Descriptor: m,
+							Location:   locations.MessageResource(m),
+						})
+					}
+					continue
+				}
+				if HasUpper(seg) || strings.Contains(seg, "_") {
 					problems = append(problems, lint.Problem{
-						Message:    "Resource patterns must use lowerCamelCase for collection identifiers.",
+						Message:    "Resource patterns must use kebab-case for collection identifiers.",
 						Descriptor: m,
 						Location:   locations.MessageResource(m),
 					})

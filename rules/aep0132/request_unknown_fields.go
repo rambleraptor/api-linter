@@ -16,14 +16,14 @@ package aep0132
 
 import (
 	"bitbucket.org/creachadair/stringset"
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 var allowedFields = stringset.New(
 	"parent",       // AEP-132
-	"page_size",    // AEP-158
+	"max_page_size",    // AEP-158
 	"page_token",   // AEP-158
 	"skip",         // AEP-158
 	"filter",       // AEP-132
@@ -36,7 +36,8 @@ var allowedFields = stringset.New(
 
 // List methods should not have unrecognized fields.
 var unknownFields = &lint.FieldRule{
-	Name: lint.NewRuleName(132, "request-unknown-fields"),
+	Name:     lint.NewRuleName(132, "request-unknown-fields"),
+	RuleType: lint.NewRuleType(lint.MustRule),
 	OnlyIf: func(f *desc.FieldDescriptor) bool {
 		return utils.IsListRequestMessage(f.GetOwner())
 	},

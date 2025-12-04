@@ -17,7 +17,7 @@ package aep0131
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 )
 
 func TestMethodSignature(t *testing.T) {
@@ -27,13 +27,13 @@ func TestMethodSignature(t *testing.T) {
 		Signature  string
 		problems   testutils.Problems
 	}{
-		{"Valid", "GetBook", `option (google.api.method_signature) = "name";`, testutils.Problems{}},
-		{"Missing", "GetBook", "", testutils.Problems{{Message: `(google.api.method_signature) = "name"`}}},
+		{"Valid", "GetBook", `option (google.api.method_signature) = "path";`, testutils.Problems{}},
+		{"Missing", "GetBook", "", testutils.Problems{{Message: `(google.api.method_signature) = "path"`}}},
 		{
 			"Wrong",
 			"GetBook",
 			`option (google.api.method_signature) = "book";`,
-			testutils.Problems{{Suggestion: `option (google.api.method_signature) = "name";`}},
+			testutils.Problems{{Suggestion: `option (google.api.method_signature) = "path";`}},
 		},
 		{"Irrelevant", "ReadBook", "", testutils.Problems{}},
 	} {
@@ -50,7 +50,7 @@ func TestMethodSignature(t *testing.T) {
 			`, test)
 			m := f.GetServices()[0].GetMethods()[0]
 			if diff := test.problems.SetDescriptor(m).Diff(methodSignature.Lint(f)); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}

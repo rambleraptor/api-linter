@@ -18,15 +18,16 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/locations"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/locations"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 var lroResponseReachable = &lint.MethodRule{
-	Name:   lint.NewRuleName(151, "lro-response-reachable"),
-	OnlyIf: isAnnotatedLRO,
+	Name:     lint.NewRuleName(151, "lro-response-reachable"),
+	RuleType: lint.NewRuleType(lint.MustRule),
+	OnlyIf:   isAnnotatedLRO,
 	LintMethod: func(m *desc.MethodDescriptor) (problems []lint.Problem) {
 		return checkReachable(m, utils.GetOperationInfo(m).GetResponseType())
 	},

@@ -15,9 +15,9 @@
 package aep0132
 
 import (
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 var knownFields = map[string]func(*desc.FieldDescriptor) []lint.Problem{
@@ -28,7 +28,8 @@ var knownFields = map[string]func(*desc.FieldDescriptor) []lint.Problem{
 
 // List fields should have the correct type.
 var requestFieldTypes = &lint.FieldRule{
-	Name: lint.NewRuleName(132, "request-field-types"),
+	Name:     lint.NewRuleName(132, "request-field-types"),
+	RuleType: lint.NewRuleType(lint.MustRule),
 	OnlyIf: func(f *desc.FieldDescriptor) bool {
 		return utils.IsListRequestMessage(f.GetOwner()) && knownFields[f.GetName()] != nil
 	},

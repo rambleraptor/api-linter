@@ -18,21 +18,23 @@ import (
 	"fmt"
 
 	"bitbucket.org/creachadair/stringset"
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 // Update methods should not have unrecognized fields.
 var unknownFields = &lint.MessageRule{
-	Name:   lint.NewRuleName(134, "request-unknown-fields"),
-	OnlyIf: utils.IsUpdateRequestMessage,
+	Name:     lint.NewRuleName(134, "request-unknown-fields"),
+	RuleType: lint.NewRuleType(lint.MustRule),
+	OnlyIf:   utils.IsUpdateRequestMessage,
 	LintMessage: func(m *desc.MessageDescriptor) (problems []lint.Problem) {
 		resource := extractResource(m.GetName())
 		// Rule check: Establish that there are no unexpected fields.
 		allowedFields := stringset.New(
 			fieldNameFromResource(resource), // AEP-134
 			"allow_missing",                 // AEP-134
+			"path",                          // AEP-134
 			"request_id",                    // AEP-155
 			"update_mask",                   // AEP-134
 			"validate_only",                 // AEP-163

@@ -15,8 +15,8 @@
 package aep0144
 
 import (
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
 )
 
 // Add/Remove methods should use "*" as the HTTP body.
@@ -24,4 +24,5 @@ var httpBody = &lint.MethodRule{
 	Name:       lint.NewRuleName(144, "http-body"),
 	OnlyIf:     isAddRemoveMethod,
 	LintMethod: utils.LintWildcardHTTPBody,
+	RuleType:   lint.NewRuleType(lint.ShouldRule),
 }

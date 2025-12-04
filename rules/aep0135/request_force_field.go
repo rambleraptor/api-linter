@@ -15,13 +15,14 @@
 package aep0135
 
 import (
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 var requestForceField = &lint.FieldRule{
-	Name: lint.NewRuleName(135, "request-force-field"),
+	Name:     lint.NewRuleName(135, "request-force-field"),
+	RuleType: lint.NewRuleType(lint.MustRule),
 	OnlyIf: func(f *desc.FieldDescriptor) bool {
 		return utils.IsDeleteRequestMessage(f.GetOwner()) && f.GetName() == "force"
 	},

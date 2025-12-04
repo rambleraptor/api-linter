@@ -18,22 +18,25 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/locations"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/locations"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 var requestParentValidReference = &lint.FieldRule{
-	Name: lint.NewRuleName(132, "request-parent-valid-reference"),
+	Name:     lint.NewRuleName(132, "request-parent-valid-reference"),
+	RuleType: lint.NewRuleType(lint.MustRule),
 	OnlyIf: func(f *desc.FieldDescriptor) bool {
 		ref := utils.GetResourceReference(f)
-		return utils.IsListRequestMessage(f.GetOwner()) && f.GetName() == "parent" && ref != nil && ref.GetType() != ""
+		types := ref.GetType()
+		return utils.IsListRequestMessage(f.GetOwner()) && f.GetName() == "parent" && ref != nil && len(types) > 0
 	},
 	LintField: func(f *desc.FieldDescriptor) []lint.Problem {
 		p := f.GetParent()
-		msg := p.(*desc.MessageDescriptor)
-		res := utils.GetResourceReference(f).GetType()
+		msg, _ := p.(*desc.MessageDescriptor)
+		types := utils.GetResourceReference(f).GetType()
+		res := types[0]
 
 		response := utils.FindMessage(f.GetFile(), strings.Replace(msg.GetName(), "Request", "Response", 1))
 		if response == nil {
@@ -48,7 +51,7 @@ var requestParentValidReference = &lint.FieldRule{
 
 			if r := utils.GetResource(typ); r != nil && r.GetType() == res {
 				return []lint.Problem{{
-					Message:    fmt.Sprintf("The `google.api.resource_reference` on `%s` field should reference the parent(s) of `%s`.", f.GetName(), res),
+					Message:    fmt.Sprintf("The `(aep.api.field_info).resource_reference` on `%s` field should reference the parent(s) of `%s`.", f.GetName(), res),
 					Descriptor: f,
 					Location:   locations.FieldResourceReference(f),
 				}}

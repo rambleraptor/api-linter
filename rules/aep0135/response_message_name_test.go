@@ -17,24 +17,23 @@ package aep0135
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 )
 
 func TestResponseMessageName(t *testing.T) {
 	tmpl := map[string]string{
 		"sync": `
 			package test;
-			import "google/api/resource.proto";
+			import "aep/api/resource.proto";
 			import "google/protobuf/empty.proto";
 			service Library {
 				rpc {{.MethodName}}({{.MethodName}}Request) returns ({{.RespTypeName}});
 			}
 			message {{.MethodName}}Request {}
 			message Book {
-				option (google.api.resource) = {
+				option (aep.api.resource) = {
 					type: "library.googleapis.com/Book"
 					pattern: "publishers/{publisher}/books/{book}"
-					{{.Style}}
 				};
 			}
 			{{ if (ne .RespTypeName "google.protobuf.Empty") }}{{ if (ne .RespTypeName "Book") }}
@@ -43,7 +42,7 @@ func TestResponseMessageName(t *testing.T) {
 		`,
 		"lro": `
 			package test;
-			import "google/api/resource.proto";
+			import "aep/api/resource.proto";
 			import "google/longrunning/operations.proto";
 			service Library {
 				rpc {{.MethodName}}({{.MethodName}}Request)
@@ -56,10 +55,9 @@ func TestResponseMessageName(t *testing.T) {
 			}
 			message {{.MethodName}}Request {}
 			message Book {
-				option (google.api.resource) = {
+				option (aep.api.resource) = {
 					type: "library.googleapis.com/Book"
 					pattern: "publishers/{publisher}/books/{book}"
-					{{.Style}}
 				};
 			}
 		`,
@@ -107,7 +105,7 @@ func TestResponseMessageName(t *testing.T) {
 					method := file.GetServices()[0].GetMethods()[0]
 					problems := responseMessageName.Lint(file)
 					if diff := test.problems[tmplName].SetDescriptor(method).Diff(problems); diff != "" {
-						t.Errorf(diff)
+						t.Error(diff)
 					}
 				})
 			}

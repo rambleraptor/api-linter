@@ -17,13 +17,13 @@ package aep0121
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 )
 
 // TestResourceMustSupportGet tests the resourceMustSupportGet
 // lint rule by declaring a service proto, then declaring a
-// google.api.resource message, then declaring non-Get
+// aep.api.resource message, then declaring non-Get
 // methods.
 func TestResourceMustSupportGet(t *testing.T) {
 	for _, test := range []struct {
@@ -90,7 +90,7 @@ func TestResourceMustSupportGet(t *testing.T) {
 	} {
 		t.Run(test.name, func(t *testing.T) {
 			file := testutils.ParseProto3Tmpl(t, `
-				import "google/api/resource.proto";
+				import "aep/api/resource.proto";
 				import "google/longrunning/operations.proto";
 				import "google/protobuf/field_mask.proto";
 				service Foo {
@@ -100,7 +100,7 @@ func TestResourceMustSupportGet(t *testing.T) {
 				// This is at the top to make it retrievable
 				// by the test code.
 				message Book {
-					option (google.api.resource) = {
+					option (aep.api.resource) = {
 						type: "library.googleapis.com/Book"
 						pattern: "books/{book}"
 						singular: "book"

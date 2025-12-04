@@ -18,14 +18,15 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/locations"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/locations"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 // Update methods should use the word "update", not synonyms.
 var synonyms = &lint.MethodRule{
-	Name: lint.NewRuleName(134, "synonyms"),
+	Name:     lint.NewRuleName(134, "synonyms"),
+	RuleType: lint.NewRuleType(lint.MustRule),
 	OnlyIf: func(m *desc.MethodDescriptor) bool {
 		return m.GetName() != "SetIamPolicy"
 	},

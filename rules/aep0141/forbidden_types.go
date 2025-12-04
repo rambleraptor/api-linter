@@ -18,14 +18,15 @@ import (
 	"fmt"
 
 	"bitbucket.org/creachadair/stringset"
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/locations"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/locations"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 var forbiddenTypes = &lint.FieldRule{
-	Name: lint.NewRuleName(141, "forbidden-types"),
+	Name:     lint.NewRuleName(141, "forbidden-types"),
+	RuleType: lint.NewRuleType(lint.MustRule),
 	LintField: func(f *desc.FieldDescriptor) []lint.Problem {
 		nope := stringset.New("fixed32", "fixed64", "uint32", "uint64")
 		if typeName := utils.GetTypeName(f); nope.Contains(typeName) {

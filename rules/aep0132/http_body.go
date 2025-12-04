@@ -15,13 +15,14 @@
 package aep0132
 
 import (
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
 )
 
 // List methods should not have an HTTP body.
 var httpBody = &lint.MethodRule{
 	Name:       lint.NewRuleName(132, "http-body"),
+	RuleType:   lint.NewRuleType(lint.MustRule),
 	OnlyIf:     utils.IsListMethod,
 	LintMethod: utils.LintNoHTTPBody,
 }

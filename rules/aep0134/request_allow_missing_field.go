@@ -15,13 +15,14 @@
 package aep0134
 
 import (
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 var allowMissing = &lint.MessageRule{
-	Name: lint.NewRuleName(134, "request-allow-missing-field"),
+	Name:     lint.NewRuleName(134, "request-allow-missing-field"),
+	RuleType: lint.NewRuleType(lint.MayRule),
 	OnlyIf: func(m *desc.MessageDescriptor) bool {
 		if !utils.IsUpdateRequestMessage(m) {
 			return false

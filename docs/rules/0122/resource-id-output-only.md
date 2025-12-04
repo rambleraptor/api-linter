@@ -25,14 +25,14 @@ as `uid` or with the `_id` suffix, that is not classified as `OUTPUT_ONLY`.
 ```proto
 // Incorrect.
 message Book {
-  option (google.api.resource) = {
+  option (aep.api.resource) = {
     type: "library.googleapis.com/Book"
     pattern: "books/{book}"
   };
-  string name = 1;
-  // Should have `(google.api.field_behavior) = OUTPUT_ONLY`.
+  string path = 1;
+  // Should have `(aep.api.field_behavior) = FIELD_BEHAVIOR_OUTPUT_ONLY`.
   string book_id = 2;
-  // Should have `(google.api.field_behavior) = OUTPUT_ONLY`.
+  // Should have `(aep.api.field_behavior) = FIELD_BEHAVIOR_OUTPUT_ONLY`.
   string uid = 3;
 }
 ```
@@ -42,13 +42,13 @@ message Book {
 ```proto
 // Correct.
 message Book {
-  option (google.api.resource) = {
+  option (aep.api.resource) = {
     type: "library.googleapis.com/Book"
     pattern: "books/{book}"
   };
-  string name = 1;
-  string book_id = 2 [(google.api.field_behavior) = OUTPUT_ONLY];
-  string uid = 3 [(google.api.field_behavior) = OUTPUT_ONLY];
+  string path = 1;
+  string book_id = 2 [(aep.api.field_info).field_behavior = FIELD_BEHAVIOR_OUTPUT_ONLY];
+  string uid = 3 [(aep.api.field_info).field_behavior = FIELD_BEHAVIOR_OUTPUT_ONLY];
 }
 ```
 
@@ -58,11 +58,11 @@ If you need to violate this rule, use a leading comment above the field.
 
 ```proto
 message Book {
-  option (google.api.resource) = {
+  option (aep.api.resource) = {
     type: "library.googleapis.com/Book"
     pattern: "books/{book}"
   };
-  string name = 1;
+  string path = 1;
   // (-- api-linter: core::0122::resource-id-output-only=disabled
   //     aep.dev/not-precedent: We need to do this because reasons. --)
   string book_id = 2;

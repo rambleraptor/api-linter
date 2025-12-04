@@ -17,7 +17,7 @@ package aep0133
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 )
 
 func TestRequestResourceBehavior(t *testing.T) {
@@ -28,14 +28,14 @@ func TestRequestResourceBehavior(t *testing.T) {
 		FieldBehavior string
 		problems      testutils.Problems
 	}{
-		{"Valid", "CreateBookRequest", "Book", " [(google.api.field_behavior) = REQUIRED]", testutils.Problems{}},
-		{"Missing", "CreateBookRequest", "Book", "", testutils.Problems{{Message: "(google.api.field_behavior) = REQUIRED"}}},
+		{"Valid", "CreateBookRequest", "Book", " [(aep.api.field_info).field_behavior = FIELD_BEHAVIOR_REQUIRED]", testutils.Problems{}},
+		{"Missing", "CreateBookRequest", "Book", "", testutils.Problems{{Message: "(aep.api.field_info).field_behavior = FIELD_BEHAVIOR_REQUIRED"}}},
 		{"IrrelevantOtherField", "CreateBookRequest", "Parchment", "", testutils.Problems{}},
 		{"IrrelevantNotCreateRequest", "FrobBookRequest", "Book", "", testutils.Problems{}},
 	} {
 		t.Run(test.name, func(t *testing.T) {
 			f := testutils.ParseProto3Tmpl(t, `
-				import "google/api/field_behavior.proto";
+				import "aep/api/field_info.proto";
 				message {{.MessageName}} {
 					{{.FieldType}} book = 1{{.FieldBehavior}};
 				}
@@ -43,7 +43,7 @@ func TestRequestResourceBehavior(t *testing.T) {
 			`, test)
 			field := f.GetMessageTypes()[0].GetFields()[0]
 			if diff := test.problems.SetDescriptor(field).Diff(requestResourceBehavior.Lint(f)); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}

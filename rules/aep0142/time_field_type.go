@@ -18,14 +18,15 @@ import (
 	"strings"
 
 	"bitbucket.org/creachadair/stringset"
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/locations"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/locations"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 var fieldType = &lint.FieldRule{
-	Name: lint.NewRuleName(142, "time-field-type"),
+	Name:     lint.NewRuleName(142, "time-field-type"),
+	RuleType: lint.NewRuleType(lint.ShouldRule),
 	LintField: func(f *desc.FieldDescriptor) []lint.Problem {
 		tokens := strings.Split(f.GetName(), "_")
 		suffix := tokens[len(tokens)-1]

@@ -3,7 +3,7 @@ package utils
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 	"github.com/jhump/protoreflect/desc/builder"
 )
 
@@ -38,12 +38,12 @@ func TestLintRequiredField(t *testing.T) {
 		Annotation string
 		problems   testutils.Problems
 	}{
-		{"Valid", `[(google.api.field_behavior) = REQUIRED]`, nil},
+		{"Valid", `[(aep.api.field_info).field_behavior = FIELD_BEHAVIOR_REQUIRED]`, nil},
 		{"Invalid", ``, testutils.Problems{{Message: "REQUIRED"}}},
 	} {
 		t.Run(test.testName, func(t *testing.T) {
 			f := testutils.ParseProto3Tmpl(t, `
-				import "google/api/field_behavior.proto";
+				import "aep/api/field_info.proto";
 				message Message {
 					string foo = 1 {{.Annotation}};
 				}
@@ -63,12 +63,13 @@ func TestLintFieldResourceReference(t *testing.T) {
 		Annotation string
 		problems   testutils.Problems
 	}{
-		{"Valid", `[(google.api.resource_reference).type = "bar"]`, nil},
+		{"Valid", `[(aep.api.field_info).resource_reference = "bar"]`, nil},
 		{"Invalid", ``, testutils.Problems{{Message: "resource_reference"}}},
 	} {
 		t.Run(test.testName, func(t *testing.T) {
 			f := testutils.ParseProto3Tmpl(t, `
-				import "google/api/resource.proto";
+				import "aep/api/resource.proto";
+				import "aep/api/field_info.proto";
 				message Message {
 					string foo = 1 {{.Annotation}};
 				}

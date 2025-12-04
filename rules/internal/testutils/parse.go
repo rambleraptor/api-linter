@@ -16,18 +16,20 @@ package testutils
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"strings"
 	"testing"
 	"text/template"
 
-	"github.com/jhump/protoreflect/desc"
-	"github.com/jhump/protoreflect/desc/protoparse"
+	"github.com/aep-dev/api-linter/lint/desc"
+	"github.com/bufbuild/protocompile"
 	"github.com/lithammer/dedent"
 
 	// These imports cause the common protos to be registered with
 	// the protocol buffer registry, and therefore make the call to
 	// `proto.FileDescriptor` work for the imported files.
+	_ "buf.build/gen/go/aep/api/protocolbuffers/go/aep/api"
 	_ "cloud.google.com/go/longrunning/autogen/longrunningpb"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	_ "google.golang.org/genproto/googleapis/type/date"
@@ -41,24 +43,26 @@ import (
 // It dedents the string before parsing.
 func ParseProtoStrings(t *testing.T, src map[string]string) map[string]*desc.FileDescriptor {
 	filenames := []string{}
+	srcMap := make(map[string]string)
 	for k, v := range src {
 		filenames = append(filenames, k)
-		src[k] = strings.TrimSpace(dedent.Dedent(v))
+		srcMap[k] = strings.TrimSpace(dedent.Dedent(v))
 	}
 
-	// Parse the file.
-	parser := protoparse.Parser{
-		Accessor:              protoparse.FileContentsFromMap(src),
-		IncludeSourceCodeInfo: true,
-		LookupImport:          desc.LoadFileDescriptor,
+	// Parse the file using protocompile
+	compiler := &protocompile.Compiler{
+		Resolver:       &protocompile.SourceResolver{Accessor: protocompile.SourceAccessorFromMap(srcMap)},
+		SourceInfoMode: protocompile.SourceInfoStandard,
 	}
-	fds, err := parser.ParseFiles(filenames...)
+	ctx := context.Background()
+	fds, err := compiler.Compile(ctx, filenames...)
 	if err != nil {
 		t.Fatalf("%v", err)
 	}
 	answer := map[string]*desc.FileDescriptor{}
 	for _, fd := range fds {
-		answer[fd.GetName()] = fd
+		wrapped := desc.WrapFile(fd)
+		answer[wrapped.GetName()] = wrapped
 	}
 	return answer
 }

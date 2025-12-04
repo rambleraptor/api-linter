@@ -18,7 +18,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint/desc"
 	"github.com/jhump/protoreflect/desc/builder"
 )
 

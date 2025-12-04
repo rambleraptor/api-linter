@@ -17,7 +17,7 @@ package aep0132
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 )
 
 func TestRequestParentField(t *testing.T) {
@@ -51,7 +51,7 @@ func TestRequestParentField(t *testing.T) {
 			problems := requestParentField.Lint(f)
 			field := f.GetMessageTypes()[0].GetFields()[0]
 			if diff := test.problems.SetDescriptor(field).Diff(problems); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}

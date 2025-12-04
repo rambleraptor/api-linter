@@ -24,7 +24,7 @@ other resources do not create a mutable cycle between them.
 
 ```proto
 message Book {
-  option (google.api.resource) = {
+  option (aep.api.resource) = {
     type: "library.googleapis.com/Book"
     pattern: "books/{book}"
   };
@@ -33,12 +33,12 @@ message Book {
 
   // Incorrect. Creates potential reference cycle.
   string author = 2 [
-    (google.api.resource_reference).type = "library.googleapis.com/Author"
+    (aep.api.field_info).resource_reference = "library.googleapis.com/Author"
   ];
 }
 
 message Author {
-  option (google.api.resource) = {
+  option (aep.api.resource) = {
     type: "library.googleapis.com/Author"
     pattern: "authors/{author}"
   };
@@ -47,7 +47,7 @@ message Author {
 
   // Incorrect. Creates potential reference cycle.
   string book = 2 [
-    (google.api.resource_reference).type = "library.googleapis.com/Book"
+    (aep.api.field_info).resource_reference = "library.googleapis.com/Book"
   ];
 }
 ```
@@ -56,7 +56,7 @@ message Author {
 
 ```proto
 message Book {
-  option (google.api.resource) = {
+  option (aep.api.resource) = {
     type: "library.googleapis.com/Book"
     pattern: "books/{book}"
   };
@@ -65,12 +65,12 @@ message Book {
 
   // Correct because the other reference is OUTPUT_ONLY.
   string author = 2 [
-    (google.api.resource_reference).type = "library.googleapis.com/Author"
+    (aep.api.field_info).resource_reference = "library.googleapis.com/Author"
   ];
 }
 
 message Author {
-  option (google.api.resource) = {
+  option (aep.api.resource) = {
     type: "library.googleapis.com/Author"
     pattern: "authors/{author}"
   };
@@ -79,8 +79,8 @@ message Author {
 
   // Correct because an OUTPUT_ONLY reference breaks the mutation cycle.
   string book = 2 [
-    (google.api.resource_reference).type = "library.googleapis.com/Book",
-    (google.api.field_behavior) = OUTPUT_ONLY
+    (aep.api.field_info).resource_reference = "library.googleapis.com/Book",
+    (aep.api.field_behavior) = FIELD_BEHAVIOR_OUTPUT_ONLY
   ];
 }
 ```
@@ -92,7 +92,7 @@ Remember to also include an [aep.dev/not-precedent][] comment explaining why.
 
 ```proto
 message Book {
-  option (google.api.resource) = {
+  option (aep.api.resource) = {
     type: "library.googleapis.com/Book"
     pattern: "books/{book}"
   };
@@ -102,12 +102,12 @@ message Book {
   // (-- api-linter: core::0121::no-mutable-cycles=disabled
   //     aep.dev/not-precedent: We need to do this because reasons. --)
   string author = 2 [
-    (google.api.resource_reference).type = "library.googleapis.com/Author"
+    (aep.api.field_info).resource_reference = "library.googleapis.com/Author"
   ];
 }
 
 message Author {
-  option (google.api.resource) = {
+  option (aep.api.resource) = {
     type: "library.googleapis.com/Author"
     pattern: "authors/{author}"
   };
@@ -117,7 +117,7 @@ message Author {
   // (-- api-linter: core::0121::no-mutable-cycles=disabled
   //     aep.dev/not-precedent: We need to do this because reasons. --)
   string book = 2 [
-    (google.api.resource_reference).type = "library.googleapis.com/Book"
+    (aep.api.field_info).resource_reference = "library.googleapis.com/Book"
   ];
 }
 ```

@@ -15,14 +15,15 @@
 package aep0158
 
 import (
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 var requestPaginationPageToken = &lint.MessageRule{
-	Name:   lint.NewRuleName(158, "request-page-token-field"),
-	OnlyIf: isPaginatedRequestMessage,
+	Name:     lint.NewRuleName(158, "request-page-token-field"),
+	RuleType: lint.NewRuleType(lint.ShouldRule),
+	OnlyIf:   isPaginatedRequestMessage,
 	LintMessage: func(m *desc.MessageDescriptor) []lint.Problem {
 		f, problems := utils.LintFieldPresent(m, "page_token")
 		if len(problems) > 0 {

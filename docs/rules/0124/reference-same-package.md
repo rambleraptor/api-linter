@@ -15,7 +15,7 @@ in the same package, as described in [AEP-124][].
 
 ## Details
 
-This rule scans all fields with `google.api.resource_reference` annotations,
+This rule scans all fields with `(aep.api.field_info).resource_reference` annotations,
 and complains if the `type` on them refers to a resource that is defined in a
 different protobuf package.
 
@@ -30,7 +30,7 @@ Certain common resource types are exempt from this rule.
 package google.example.library.v1;
 
 message Book {
-  option (google.api.resource) = {
+  option (aep.api.resource) = {
     type: "library.googleapis.com/Book"
     pattern: "publishers/{publisher}/books/{book}"
   };
@@ -46,9 +46,7 @@ message Book {
 package google.example.libray.v1;  // Typo: Different package.
 
 message GetBookRequest {
-  string name = 1 [(google.api.resource_reference) = {
-    type: "library.googleapis.com/Book"  // Lint warning: package mismatch.
-  }];
+  string name = 1 [(aep.api.field_info).resource_reference = "library.googleapis.com/Book"];  // Lint warning: package mismatch.
 }
 ```
 
@@ -59,7 +57,7 @@ message GetBookRequest {
 package google.example.library;
 
 message Book {
-  option (google.api.resource) = {
+  option (aep.api.resource) = {
     type: "library.googleapis.com/Book"
     pattern: "publishers/{publisher}/books/{book}"
   };
@@ -70,9 +68,7 @@ message Book {
 }
 
 message GetBookRequest {
-  string name = 1 [(google.api.resource_reference) = {
-    type: "library.googleapis.com/Book"
-  }];
+  string name = 1 [(aep.api.field_info).resource_reference = "library.googleapis.com/Book"];
 }
 ```
 
@@ -85,7 +81,7 @@ Remember to also include an [aep.dev/not-precedent][] comment explaining why.
 package google.example.library.common;
 
 message Book {
-  option (google.api.resource) = {
+  option (aep.api.resource) = {
     type: "library.googleapis.com/Book"
     pattern: "publishers/{publisher}/books/{book}"
   };
@@ -98,9 +94,7 @@ package google.example.library.v1;
 message GetBookRequest {
   // (-- api-linter: core::0124::reference-same-package=disabled
   //     aep.dev/not-precedent: We need to do this because reasons. --)
-  string name = 1 [(google.api.resource_reference) = {
-    type: "library.googleapis.com/Book"
-  }];
+  string name = 1 [(aep.api.field_info).resource_reference = "library.googleapis.com/Book"];
 }
 ```
 

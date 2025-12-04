@@ -17,14 +17,15 @@ package aep0141
 import (
 	"strings"
 
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/locations"
 	pluralize "github.com/gertd/go-pluralize"
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/locations"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 var count = &lint.FieldRule{
-	Name: lint.NewRuleName(141, "count-suffix"),
+	Name:     lint.NewRuleName(141, "count-suffix"),
+	RuleType: lint.NewRuleType(lint.ShouldRule),
 	LintField: func(f *desc.FieldDescriptor) []lint.Problem {
 		if n := f.GetName(); strings.HasPrefix(n, "num_") {
 			want := pluralize.NewClient().Singular(n[4:]) + "_count"

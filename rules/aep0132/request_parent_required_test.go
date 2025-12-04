@@ -3,7 +3,7 @@ package aep0132
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 )
 
 func TestRequestParentRequired(t *testing.T) {
@@ -28,7 +28,7 @@ func TestRequestParentRequired(t *testing.T) {
 			`, test)
 			problems := requestParentRequired.Lint(f)
 			if diff := test.problems.SetDescriptor(f.GetMessageTypes()[0]).Diff(problems); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}
@@ -45,21 +45,21 @@ func TestRequestParentRequired(t *testing.T) {
 		t.Run(test.testName, func(t *testing.T) {
 			f := testutils.ParseProto3Tmpl(t, `
 				{{.Package}}
-				import "google/api/resource.proto";
+				import "aep/api/resource.proto";
 				message ListBooksRequest {}
 				message ListBooksResponse {
 					repeated Book books = 1;
 				}
 				message Book {
-					option (google.api.resource) = {
+					option (aep.api.resource) = {
 						pattern: "books/{book}"
 					};
-					string name = 1;
+					string path = 1;
 				}
 			`, test)
 			problems := requestParentRequired.Lint(f)
 			if diff := (testutils.Problems{}).Diff(problems); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}

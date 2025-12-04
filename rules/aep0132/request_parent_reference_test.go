@@ -17,21 +17,20 @@ package aep0132
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 )
 
 func TestRequestParentReference(t *testing.T) {
 	t.Run("Present", func(t *testing.T) {
 		f := testutils.ParseProto3String(t, `
-			import "google/api/resource.proto";
+			import "aep/api/resource.proto";
+  import "aep/api/field_info.proto";
 			message ListBooksRequest {
-				string parent = 1 [(google.api.resource_reference) = {
-					type: "library.googleapis.com/Publisher"
-				}];
+				string parent = 1 [(aep.api.field_info).resource_reference = "library.googleapis.com/Publisher"];
 			}
 		`)
 		if diff := (testutils.Problems{}).Diff(requestParentReference.Lint(f)); diff != "" {
-			t.Errorf(diff)
+			t.Error(diff)
 		}
 	})
 	t.Run("Absent", func(t *testing.T) {
@@ -40,19 +39,20 @@ func TestRequestParentReference(t *testing.T) {
 			FieldName string
 			problems  testutils.Problems
 		}{
-			{"Error", "parent", testutils.Problems{{Message: "google.api.resource_reference"}}},
+			{"Error", "parent", testutils.Problems{{Message: "(aep.api.field_info).resource_reference"}}},
 			{"Irrelevant", "something_else", testutils.Problems{}},
 		} {
 			t.Run(test.name, func(t *testing.T) {
 				f := testutils.ParseProto3Tmpl(t, `
-					import "google/api/resource.proto";
+					import "aep/api/resource.proto";
+  import "aep/api/field_info.proto";
 					message ListBooksRequest {
 						string {{.FieldName}} = 1;
 					}
 				`, test)
 				field := f.GetMessageTypes()[0].GetFields()[0]
 				if diff := test.problems.SetDescriptor(field).Diff(requestParentReference.Lint(f)); diff != "" {
-					t.Errorf(diff)
+					t.Error(diff)
 				}
 			})
 		}

@@ -24,9 +24,9 @@ field and complains if the field is not a singular `bool`.
 
 ```proto
 message DeletePublisherRequest {
-  string name = 1 [
-    (google.api.resource_reference).type = "library.googleapis.com/Publisher",
-    (google.api.field_behavior) = REQUIRED
+  string path = 1 [
+    (aep.api.field_info).resource_reference = "library.googleapis.com/Publisher",
+    (aep.api.field_behavior) = FIELD_BEHAVIOR_REQUIRED
   ];
 
   int32 force = 2;  // Field type should be `bool`.
@@ -37,9 +37,9 @@ message DeletePublisherRequest {
 
 ```proto
 message DeletePublisherRequest {
-  string name = 1 [
-    (google.api.resource_reference).type = "library.googleapis.com/Publisher",
-    (google.api.field_behavior) = REQUIRED
+  string path = 1 [
+    (aep.api.field_info).resource_reference = "library.googleapis.com/Publisher",
+    (aep.api.field_behavior) = FIELD_BEHAVIOR_REQUIRED
   ];
 
   bool force = 2;
@@ -53,9 +53,9 @@ Remember to also include an [aep.dev/not-precedent][] comment explaining why.
 
 ```proto
 message DeletePublisherRequest {
-  string name = 1 [
-    (google.api.resource_reference).type = "library.googleapis.com/Publisher",
-    (google.api.field_behavior) = REQUIRED
+  string path = 1 [
+    (aep.api.field_info).resource_reference = "library.googleapis.com/Publisher",
+    (aep.api.field_behavior) = FIELD_BEHAVIOR_REQUIRED
   ];
 
   // (-- api-linter: core::0135::request-force-field=disabled

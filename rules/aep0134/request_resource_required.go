@@ -3,15 +3,16 @@ package aep0134
 import (
 	"fmt"
 
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 // The create request message should have resource field.
 var requestResourceRequired = &lint.MessageRule{
-	Name:   lint.NewRuleName(134, "request-resource-required"),
-	OnlyIf: utils.IsUpdateRequestMessage,
+	Name:     lint.NewRuleName(134, "request-resource-required"),
+	RuleType: lint.NewRuleType(lint.MustRule),
+	OnlyIf:   utils.IsUpdateRequestMessage,
 	LintMessage: func(m *desc.MessageDescriptor) []lint.Problem {
 		resourceMsgName := extractResource(m.GetName())
 		for _, fieldDesc := range m.GetFields() {

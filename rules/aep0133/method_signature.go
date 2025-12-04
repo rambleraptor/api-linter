@@ -19,16 +19,17 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/locations"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/locations"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 	"github.com/stoewer/go-strcase"
 )
 
 var methodSignature = &lint.MethodRule{
-	Name:   lint.NewRuleName(133, "method-signature"),
-	OnlyIf: utils.IsCreateMethod,
+	Name:     lint.NewRuleName(133, "method-signature"),
+	OnlyIf:   utils.IsCreateMethod,
+	RuleType: lint.NewRuleType(lint.ShouldRule),
 	LintMethod: func(m *desc.MethodDescriptor) []lint.Problem {
 		signatures := utils.GetMethodSignatures(m)
 

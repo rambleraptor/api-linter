@@ -16,7 +16,7 @@
 package aep0122
 
 import (
-	"github.com/googleapis/api-linter/lint"
+	"github.com/aep-dev/api-linter/lint"
 )
 
 // AddRules accepts a register function and registers each of
@@ -26,10 +26,9 @@ func AddRules(r lint.RuleRegistry) error {
 		122,
 		resourceCollectionIdentifiers,
 		httpURICase,
-		nameSuffix,
+		pathSuffix,
 		noSelfLinks,
 		resourceReferenceType,
 		resourceIdOutputOnly,
-		embeddedResource,
 	)
 }

@@ -17,9 +17,9 @@ package utils
 import (
 	"fmt"
 
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/locations"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/locations"
+	"github.com/aep-dev/api-linter/lint/desc"
 	"github.com/jhump/protoreflect/desc/builder"
 )
 
@@ -94,10 +94,10 @@ func LintFieldPresentAndSingularString(field string) func(*desc.MessageDescripto
 	}
 }
 
-func lintFieldBehavior(f *desc.FieldDescriptor, want string) []lint.Problem {
+func lintFieldBehavior(f *desc.FieldDescriptor, want string, wantMessage string) []lint.Problem {
 	if !GetFieldBehavior(f).Contains(want) {
 		return []lint.Problem{{
-			Message:    fmt.Sprintf("The `%s` field should include `(google.api.field_behavior) = %s`.", f.GetName(), want),
+			Message:    fmt.Sprintf("The `%s` field should include `(aep.api.field_info).field_behavior = %s`.", f.GetName(), wantMessage),
 			Descriptor: f,
 		}}
 	}
@@ -106,19 +106,19 @@ func lintFieldBehavior(f *desc.FieldDescriptor, want string) []lint.Problem {
 
 // LintRequiredField returns a problem if the field's behavior is not REQUIRED.
 func LintRequiredField(f *desc.FieldDescriptor) []lint.Problem {
-	return lintFieldBehavior(f, "REQUIRED")
+	return lintFieldBehavior(f, "REQUIRED", "FIELD_BEHAVIOR_REQUIRED")
 }
 
 // LintOutputOnlyField returns a problem if the field's behavior is not OUTPUT_ONLY.
 func LintOutputOnlyField(f *desc.FieldDescriptor) []lint.Problem {
-	return lintFieldBehavior(f, "OUTPUT_ONLY")
+	return lintFieldBehavior(f, "OUTPUT_ONLY", "FIELD_BEHAVIOR_OUTPUT_ONLY")
 }
 
 // LintFieldResourceReference returns a problem if the field does not have a resource reference annotation.
 func LintFieldResourceReference(f *desc.FieldDescriptor) []lint.Problem {
 	if ref := GetResourceReference(f); ref == nil {
 		return []lint.Problem{{
-			Message:    fmt.Sprintf("The `%s` field should include a `google.api.resource_reference` annotation.", f.GetName()),
+			Message:    fmt.Sprintf("The `%s` field should include a `(aep.api.field_info).resource_reference` annotation.", f.GetName()),
 			Descriptor: f,
 		}}
 	}
@@ -194,6 +194,7 @@ func LintMethodHasMatchingResponseName(m *desc.MethodDescriptor) []lint.Problem 
 
 // LintHTTPURIHasParentVariable returns a problem if any of the given method's HTTP rules do not
 // have a parent variable in the URI.
+// This is only required if the resource is not top-level.
 func LintHTTPURIHasParentVariable(m *desc.MethodDescriptor) []lint.Problem {
 	return LintHTTPURIHasVariable(m, "parent")
 }
@@ -235,10 +236,10 @@ func LintHTTPURIVariableCount(m *desc.MethodDescriptor, n int) []lint.Problem {
 	return nil
 }
 
-// LintHTTPURIHasNameVariable returns a problem if any of the given method's HTTP rules do not
-// have a name variable in the URI.
-func LintHTTPURIHasNameVariable(m *desc.MethodDescriptor) []lint.Problem {
-	return LintHTTPURIHasVariable(m, "name")
+// LintHTTPURIHasPathVariable returns a problem if any of the given method's HTTP rules do not
+// have a path variable in the URI.
+func LintHTTPURIHasPathVariable(m *desc.MethodDescriptor) []lint.Problem {
+	return LintHTTPURIHasVariable(m, "path")
 }
 
 func max(x, y int) int {

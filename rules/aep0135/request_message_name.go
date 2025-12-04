@@ -15,13 +15,14 @@
 package aep0135
 
 import (
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
 )
 
 // Delete messages should have a properly named Request message.
 var requestMessageName = &lint.MethodRule{
 	Name:       lint.NewRuleName(135, "request-message-name"),
+	RuleType:   lint.NewRuleType(lint.MustRule),
 	OnlyIf:     utils.IsDeleteMethod,
 	LintMethod: utils.LintMethodHasMatchingRequestName,
 }

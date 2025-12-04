@@ -28,8 +28,8 @@ missing.
 // Incorrect.
 message DeletePublisherRequest {
   // Where Publisher parents the Book resource.
-  string name = 1 [
-    (google.api.resource_reference).type = "library.googleapis.com/Publisher"]; 
+  string path = 1 [
+    (aep.api.field_info).resource_reference = "library.googleapis.com/Publisher"]; 
 
   // Missing `bool force` field.
 }
@@ -41,8 +41,8 @@ message DeletePublisherRequest {
 // Correct.
 message DeletePublisherRequest {
   // Where Publisher parents the Book resource.
-  string name = 1 [
-    (google.api.resource_reference).type = "library.googleapis.com/Publisher"]; 
+  string path = 1 [
+    (aep.api.field_info).resource_reference = "library.googleapis.com/Publisher"]; 
 
   // If set to true, any books from this publisher will also be deleted.
   // (Otherwise, the request will only work if the publisher has no books.)
@@ -53,7 +53,7 @@ message DeletePublisherRequest {
 ## Disabling
 
 If you need to violate this rule, use a leading comment above the message (if
-the `name` field is missing) or above the field (if it is the wrong type).
+the `path` field is missing) or above the field (if it is the wrong type).
 Remember to also include an [aep.dev/not-precedent][] comment explaining why.
 
 ```proto
@@ -61,8 +61,8 @@ Remember to also include an [aep.dev/not-precedent][] comment explaining why.
 //     aep.dev/not-precedent: We need to do this because reasons. --)
 message DeletePublisherRequest {
   // Where Publisher parents the Book resource.
-  string name = 1 [
-    (google.api.resource_reference).type = "library.googleapis.com/Publisher"]; 
+  string path = 1 [
+    (aep.api.field_info).resource_reference = "library.googleapis.com/Publisher"]; 
 }
 ```
 

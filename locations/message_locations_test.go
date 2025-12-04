@@ -22,9 +22,9 @@ import (
 
 func TestMessageResource(t *testing.T) {
 	f := parse(t, `
-		import "google/api/resource.proto";
+		import "aep/api/resource.proto";
 		message Book {
-		  option (google.api.resource) = {
+		  option (aep.api.resource) = {
 		    type: "library.googleapis.com/Book"
 		    pattern: "publishers/{publisher}/books/{book}"
 		  };
@@ -32,6 +32,6 @@ func TestMessageResource(t *testing.T) {
 	`)
 	loc := MessageResource(f.GetMessageTypes()[0])
 	if diff := cmp.Diff(loc.GetSpan(), []int32{4, 2, 7, 4}); diff != "" {
-		t.Errorf(diff)
+		t.Error(diff)
 	}
 }

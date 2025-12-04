@@ -15,14 +15,15 @@
 package aep0135
 
 import (
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/locations"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/locations"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 var responseLRO = &lint.MethodRule{
-	Name: lint.NewRuleName(135, "response-lro"),
+	Name:     lint.NewRuleName(135, "response-lro"),
+	RuleType: lint.NewRuleType(lint.ShouldRule),
 	OnlyIf: func(m *desc.MethodDescriptor) bool {
 		return utils.IsDeleteMethod(m) && utils.IsDeclarativeFriendlyMethod(m)
 	},

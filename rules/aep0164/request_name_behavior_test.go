@@ -17,7 +17,7 @@ package aep0164
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 )
 
 func TestRequestNameBehavior(t *testing.T) {
@@ -28,21 +28,21 @@ func TestRequestNameBehavior(t *testing.T) {
 		FieldBehavior string
 		problems      testutils.Problems
 	}{
-		{"Valid", "UndeleteBookRequest", "name", " [(google.api.field_behavior) = REQUIRED]", testutils.Problems{}},
-		{"Missing", "UndeleteBookRequest", "name", "", testutils.Problems{{Message: "(google.api.field_behavior) = REQUIRED"}}},
+		{"Valid", "UndeleteBookRequest", "name", " [(aep.api.field_info).field_behavior = FIELD_BEHAVIOR_REQUIRED]", testutils.Problems{}},
+		{"Missing", "UndeleteBookRequest", "name", "", testutils.Problems{{Message: "(aep.api.field_info).field_behavior = FIELD_BEHAVIOR_REQUIRED"}}},
 		{"IrrelevantMessage", "AcquireBookRequest", "name", "", testutils.Problems{}},
 		{"IrrelevantField", "UndeleteBookRequest", "something_else", "", testutils.Problems{}},
 	} {
 		t.Run(test.name, func(t *testing.T) {
 			f := testutils.ParseProto3Tmpl(t, `
-				import "google/api/field_behavior.proto";
+				import "aep/api/field_info.proto";
 				message {{.MessageName}} {
 					string {{.FieldName}} = 1{{.FieldBehavior}};
 				}
 			`, test)
 			field := f.GetMessageTypes()[0].GetFields()[0]
 			if diff := test.problems.SetDescriptor(field).Diff(requestNameBehavior.Lint(f)); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}

@@ -18,8 +18,8 @@ package aep0164
 import (
 	"regexp"
 
-	"github.com/googleapis/api-linter/lint"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 // AddRules adds all of the AEP-164 rules to the provided registry.

@@ -12,7 +12,7 @@ redirect_from:
 
 This rule encourages the use of one of the IP Address format annotations,
 `IPV4`, `IPV6`, or `IPV4_OR_IPV6`, on the `ip_address` field or a field ending
-with `_ip_address`, as mandated in [AEP-148][].
+with `_ip_address`, as mandated in [AIP-148][].
 
 ## Details
 
@@ -28,12 +28,12 @@ than than one of those.
 ```proto
 // Incorrect.
 message Book {
-  option (google.api.resource) = {
+  option (aep.api.resource) = {
     type: "library.googleapis.com/Book"
     pattern: "books/{book}"
   };
 
-  string name = 1 [(google.api.field_behavior) = IDENTIFIER];
+  string path = 1 [(aep.api.field_info).field_behavior = IDENTIFIER];
   string ip_address = 2; // missing (google.api.field_info).format = IPV4
 }
 ```
@@ -43,12 +43,12 @@ message Book {
 ```proto
 // Correct.
 message Book {
-  option (google.api.resource) = {
+  option (aep.api.resource) = {
     type: "library.googleapis.com/Book"
     pattern: "books/{book}"
   };
 
-  string name = 1 [(google.api.field_behavior) = IDENTIFIER];
+  string path = 1 [(aep.api.field_info).field_behavior = IDENTIFIER];
   string ip_address = 2 [(google.api.field_info).format = IPV4];
 }
 ```
@@ -61,12 +61,12 @@ comment explaining why.
 
 ```proto
 message Book {
-  option (google.api.resource) = {
+  option (aep.api.resource) = {
     type: "library.googleapis.com/Book"
     pattern: "books/{book}"
   };
 
-  string name = 1 [(google.api.field_behavior) = IDENTIFIER];
+  string path = 1 [(aep.api.field_info).field_behavior = IDENTIFIER];
 
   // (-- api-linter: core::0148::ip-address-format=disabled
   //     aep.dev/not-precedent: We need to do this because reasons. --)

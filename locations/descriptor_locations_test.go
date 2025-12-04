@@ -18,7 +18,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 func TestDescriptorName(t *testing.T) {
@@ -41,7 +41,7 @@ func TestDescriptorName(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.testName, func(t *testing.T) {
 			if diff := cmp.Diff(DescriptorName(test.d).Span, test.wantSpan); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}

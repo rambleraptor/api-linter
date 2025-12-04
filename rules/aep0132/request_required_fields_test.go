@@ -17,8 +17,8 @@ package aep0132
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 func TestRequiredFieldTests(t *testing.T) {
@@ -36,13 +36,13 @@ func TestRequiredFieldTests(t *testing.T) {
 		},
 		{
 			"ValidOptionalPageSize",
-			"int32 page_size = 2 [(google.api.field_behavior) = OPTIONAL];",
+			"int32 page_size = 2 [(aep.api.field_info).field_behavior = FIELD_BEHAVIOR_OPTIONAL];",
 			"page_size",
 			nil,
 		},
 		{
 			"InvalidRequiredPageSize",
-			"int32 page_size = 2 [(google.api.field_behavior) = REQUIRED];",
+			"int32 page_size = 2 [(aep.api.field_info).field_behavior = FIELD_BEHAVIOR_REQUIRED];",
 			"page_size",
 			testutils.Problems{
 				{Message: `List RPCs must only require fields explicitly described in AEPs, not "page_size"`},
@@ -50,7 +50,7 @@ func TestRequiredFieldTests(t *testing.T) {
 		},
 		{
 			"InvalidRequiredUnknownField",
-			"bool create_iam = 3 [(google.api.field_behavior) = REQUIRED];",
+			"bool create_iam = 3 [(aep.api.field_info).field_behavior = FIELD_BEHAVIOR_REQUIRED];",
 			"create_iam",
 			testutils.Problems{
 				{Message: `List RPCs must only require fields explicitly described in AEPs, not "create_iam"`},
@@ -60,8 +60,8 @@ func TestRequiredFieldTests(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			f := testutils.ParseProto3Tmpl(t, `
 				import "google/api/annotations.proto";
-				import "google/api/field_behavior.proto";
-				import "google/api/resource.proto";
+				import "aep/api/field_info.proto";
+				import "aep/api/resource.proto";
 
 				service Library {
 					rpc ListBooks(ListBooksRequest) returns (ListBooksResponse) {
@@ -75,10 +75,8 @@ func TestRequiredFieldTests(t *testing.T) {
 					// The parent, which owns this collection of books.
 					// Format: publishers/{publisher}
 					string parent = 1 [
-					    (google.api.field_behavior) = REQUIRED,
-					    (google.api.resource_reference) = {
-					  		child_type: "library.googleapis.com/Book"
-					    }];
+					    (aep.api.field_info).field_behavior = FIELD_BEHAVIOR_REQUIRED,
+					    (aep.api.field_info).resource_reference = "library.googleapis.com/Book"];
 
 					{{.Fields}}
 				}
@@ -89,11 +87,11 @@ func TestRequiredFieldTests(t *testing.T) {
 				}
 
 				message Book {
-					option (google.api.resource) = {
+					option (aep.api.resource) = {
 						type: "library.googleapis.com/Book"
 						pattern: "publishers/{publisher}/books/{book}"
 					};
-					string name = 1;
+					string path = 1;
 				}
 			`, test)
 			var dbr desc.Descriptor = f.FindMessage("ListBooksRequest")
@@ -101,7 +99,7 @@ func TestRequiredFieldTests(t *testing.T) {
 				dbr = f.FindMessage("ListBooksRequest").FindFieldByName(test.problematicFieldName)
 			}
 			if diff := test.problems.SetDescriptor(dbr).Diff(requestRequiredFields.Lint(f)); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}

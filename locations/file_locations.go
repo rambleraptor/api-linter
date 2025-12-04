@@ -15,7 +15,7 @@
 package locations
 
 import (
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint/desc"
 	apb "google.golang.org/genproto/googleapis/api/annotations"
 	dpb "google.golang.org/protobuf/types/descriptorpb"
 )
@@ -72,7 +72,7 @@ func FileRubyPackage(f *desc.FileDescriptor) *dpb.SourceCodeInfo_Location {
 	return pathLocation(f, 8, 45) // 8 == options, 45 == ruby_package
 }
 
-// FileResourceDefinition returns the precise location of the `google.api.resource_definition`
+// FileResourceDefinition returns the precise location of the `aep.api.resource_definition`
 // annotation.
 func FileResourceDefinition(f *desc.FileDescriptor, index int) *dpb.SourceCodeInfo_Location {
 	// 8 == options

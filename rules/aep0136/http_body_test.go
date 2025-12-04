@@ -17,7 +17,7 @@ package aep0136
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 )
 
 func TestHttpBody(t *testing.T) {
@@ -55,7 +55,7 @@ func TestHttpBody(t *testing.T) {
 			method := file.GetServices()[0].GetMethods()[0]
 			problems := httpBody.Lint(file)
 			if diff := test.problems.SetDescriptor(method).Diff(problems); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}

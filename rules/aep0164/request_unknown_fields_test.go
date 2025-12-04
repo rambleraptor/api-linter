@@ -17,7 +17,7 @@ package aep0164
 import (
 	"testing"
 
-	"github.com/googleapis/api-linter/rules/internal/testutils"
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 	"github.com/jhump/protoreflect/desc/builder"
 )
 
@@ -56,7 +56,7 @@ func TestRequestUnknownFields(t *testing.T) {
 			wantProblems := test.problems.SetDescriptor(message.FindFieldByName(test.fieldName))
 			gotProblems := requestUnknownFields.Lint(message.GetFile())
 			if diff := wantProblems.Diff(gotProblems); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}

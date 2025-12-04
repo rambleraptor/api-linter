@@ -18,8 +18,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/aep-dev/api-linter/rules/internal/testutils"
 	"github.com/google/go-cmp/cmp"
-	"github.com/googleapis/api-linter/rules/internal/testutils"
 	apb "google.golang.org/genproto/googleapis/api/annotations"
 )
 
@@ -122,7 +122,7 @@ func TestGetPlainURI(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			rule := &HTTPRule{URI: test.uri}
 			if diff := cmp.Diff(rule.GetPlainURI(), test.plainURI); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}
@@ -143,7 +143,7 @@ func TestGetVariables(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			rule := &HTTPRule{URI: test.uri}
 			if diff := cmp.Diff(rule.GetVariables(), test.vars); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}
@@ -160,7 +160,7 @@ func TestHasHTTPRules(t *testing.T) {
 		t.Run(tst.name, func(t *testing.T) {
 			file := testutils.ParseProto3Tmpl(t, `
 				import "google/api/annotations.proto";
-					
+
 				service Foo {
 					rpc ListFoos (ListFoosRequest) returns (ListFoosResponse) {
 						{{ .Annotation }}

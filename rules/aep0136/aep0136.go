@@ -18,9 +18,9 @@ package aep0136
 import (
 	"strings"
 
-	"github.com/googleapis/api-linter/lint"
-	"github.com/googleapis/api-linter/rules/internal/utils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/rules/internal/utils"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 // AddRules accepts a register function and registers each of
@@ -32,7 +32,6 @@ func AddRules(r lint.RuleRegistry) error {
 		httpMethod,
 		noPrepositions,
 		standardMethodsOnly,
-		uriSuffix,
 		verbNoun,
 		// These rules are disabled as they have no matching AEP guidance.
 		// See https://github.com/aep-dev/google.aep.dev/issues/955 for details.
@@ -52,7 +51,7 @@ func isCustomMethod(m *desc.MethodDescriptor) bool {
 
 	// Methods with no `:` in the URI are standard methods if they begin with
 	// one of the standard method names.
-	for _, prefix := range []string{"Get", "List", "Create", "Update", "Delete", "Replace"} {
+	for _, prefix := range []string{"Get", "List", "Create", "Update", "Delete", "Replace", "Apply"} {
 		if strings.HasPrefix(m.GetName(), prefix) {
 			return false
 		}

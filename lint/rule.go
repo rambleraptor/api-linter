@@ -18,8 +18,18 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint/desc"
 	dpb "google.golang.org/protobuf/types/descriptorpb"
+)
+
+type RuleType = int
+
+const (
+	// TODO: Remove NotCategorized once all rules have categories.
+	NotCategorizedRule RuleType = iota
+	MustRule
+	ShouldRule
+	MayRule // TODO: what should we do with may rules?
 )
 
 // ProtoRule defines a lint rule that checks Google Protobuf APIs.
@@ -36,6 +46,9 @@ type ProtoRule interface {
 	// Lint accepts a FileDescriptor and lints it,
 	// returning a slice of Problem objects it finds.
 	Lint(*desc.FileDescriptor) []Problem
+
+	// GetRuleType returns the type of the rule.
+	GetRuleType() RuleType
 }
 
 // FileRule defines a lint rule that checks a file as a whole.
@@ -52,6 +65,16 @@ type FileRule struct {
 
 	//lint:ignore U1000 ignored via golint previously
 	noPositional struct{}
+
+	RuleType *RuleType
+}
+
+// GetRuleType returns the type of a rule.
+func (r *FileRule) GetRuleType() RuleType {
+	if r.RuleType == nil {
+		return NotCategorizedRule
+	}
+	return *r.RuleType
 }
 
 // GetName returns the name of the rule.
@@ -84,6 +107,16 @@ type MessageRule struct {
 
 	//lint:ignore U1000 ignored via golint previously
 	noPositional struct{}
+
+	RuleType *RuleType
+}
+
+// GetRuleType returns the type of a rule.
+func (r *MessageRule) GetRuleType() RuleType {
+	if r.RuleType == nil {
+		return NotCategorizedRule
+	}
+	return *r.RuleType
 }
 
 // GetName returns the name of the rule.
@@ -121,6 +154,16 @@ type FieldRule struct {
 
 	//lint:ignore U1000 ignored via golint previously
 	noPositional struct{}
+
+	RuleType *RuleType
+}
+
+// GetRuleType returns the type of a rule.
+func (r *FieldRule) GetRuleType() RuleType {
+	if r.RuleType == nil {
+		return NotCategorizedRule
+	}
+	return *r.RuleType
 }
 
 // GetName returns the name of the rule.
@@ -160,6 +203,16 @@ type ServiceRule struct {
 
 	//lint:ignore U1000 ignored via golint previously
 	noPositional struct{}
+
+	RuleType *RuleType
+}
+
+// GetRuleType returns the type of a rule.
+func (r *ServiceRule) GetRuleType() RuleType {
+	if r.RuleType == nil {
+		return NotCategorizedRule
+	}
+	return *r.RuleType
 }
 
 // GetName returns the name of the rule.
@@ -194,6 +247,16 @@ type MethodRule struct {
 
 	//lint:ignore U1000 ignored via golint previously
 	noPositional struct{}
+
+	RuleType *RuleType
+}
+
+// GetRuleType returns the type of a rule.
+func (r *MethodRule) GetRuleType() RuleType {
+	if r.RuleType == nil {
+		return NotCategorizedRule
+	}
+	return *r.RuleType
 }
 
 // GetName returns the name of the rule.
@@ -230,6 +293,16 @@ type EnumRule struct {
 
 	//lint:ignore U1000 ignored via golint previously
 	noPositional struct{}
+
+	RuleType *RuleType
+}
+
+// GetRuleType returns the type of a rule.
+func (r *EnumRule) GetRuleType() RuleType {
+	if r.RuleType == nil {
+		return NotCategorizedRule
+	}
+	return *r.RuleType
 }
 
 // GetName returns the name of the rule.
@@ -266,6 +339,16 @@ type EnumValueRule struct {
 
 	//lint:ignore U1000 ignored via golint previously
 	noPositional struct{}
+
+	RuleType *RuleType
+}
+
+// GetRuleType returns the type of a rule.
+func (r *EnumValueRule) GetRuleType() RuleType {
+	if r.RuleType == nil {
+		return NotCategorizedRule
+	}
+	return *r.RuleType
 }
 
 // GetName returns the name of the rule.
@@ -308,6 +391,16 @@ type DescriptorRule struct {
 
 	//lint:ignore U1000 ignored via golint previously
 	noPositional struct{}
+
+	RuleType *RuleType
+}
+
+// GetRuleType returns the type of a rule.
+func (r *DescriptorRule) GetRuleType() RuleType {
+	if r.RuleType == nil {
+		return NotCategorizedRule
+	}
+	return *r.RuleType
 }
 
 // GetName returns the name of the rule.

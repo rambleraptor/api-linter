@@ -11,7 +11,7 @@ redirect_from:
 # Partial responses: Request read mask field
 
 This rule enforces that all `read_mask` fields in requests have the correct
-type, as mandated in [AEP-157][].
+type, as mandated in [AIP-157][].
 
 ## Details
 
@@ -25,9 +25,9 @@ field, and complains if the field is not a singular `google.protobuf.FieldMask`.
 ```proto
 // Incorrect.
 message GetBookRequest {
-  string name = 1 [
-    (google.api.resource_reference).type = "library.googleapis.com/Book",
-    (google.api.field_behavior) = REQUIRED
+  string path = 1 [
+    (aep.api.field_info).resource_reference = "library.googleapis.com/Book",
+    (aep.api.field_behavior) = FIELD_BEHAVIOR_REQUIRED
   ];
 
   // Field type should be `google.protobuf.FieldMask`.
@@ -40,9 +40,9 @@ message GetBookRequest {
 ```proto
 // Correct.
 message GetBookRequest {
-  string name = 1 [
-    (google.api.resource_reference).type = "library.googleapis.com/Book",
-    (google.api.field_behavior) = REQUIRED
+  string path = 1 [
+    (aep.api.field_info).resource_reference = "library.googleapis.com/Book",
+    (aep.api.field_behavior) = FIELD_BEHAVIOR_REQUIRED
   ];
 
   google.protobuf.FieldMask read_mask = 2;
@@ -56,9 +56,9 @@ Remember to also include an [aep.dev/not-precedent][] comment explaining why.
 
 ```proto
 message GetBookRequest {
-  string name = 1 [
-    (google.api.resource_reference).type = "library.googleapis.com/Book",
-    (google.api.field_behavior) = REQUIRED
+  string path = 1 [
+    (aep.api.field_info).resource_reference = "library.googleapis.com/Book",
+    (aep.api.field_behavior) = FIELD_BEHAVIOR_REQUIRED
   ];
 
   // (-- api-linter: core::0157::request-read-mask-field=disabled
