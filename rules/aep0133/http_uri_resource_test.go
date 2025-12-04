@@ -19,7 +19,7 @@ import (
 	"testing"
 
 	"github.com/aep-dev/api-linter/rules/internal/testutils"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 func TestHTTPURIResource(t *testing.T) {

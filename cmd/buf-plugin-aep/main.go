@@ -10,8 +10,8 @@ import (
 	"buf.build/go/bufplugin/check"
 	"buf.build/go/bufplugin/descriptor"
 	"github.com/aep-dev/api-linter/lint"
+	"github.com/aep-dev/api-linter/lint/desc"
 	"github.com/aep-dev/api-linter/rules"
-	"github.com/jhump/protoreflect/desc"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 

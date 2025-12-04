@@ -16,7 +16,7 @@ package aep0155
 
 import (
 	"github.com/aep-dev/api-linter/lint"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint/desc"
 	"google.golang.org/protobuf/types/descriptorpb"
 )
 

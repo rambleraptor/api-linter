@@ -15,17 +15,18 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
 	"strings"
-	"sync"
 
 	"github.com/aep-dev/api-linter/internal"
 	"github.com/aep-dev/api-linter/lint"
-	"github.com/jhump/protoreflect/desc"
-	"github.com/jhump/protoreflect/desc/protoparse"
+	"github.com/aep-dev/api-linter/lint/desc"
+	"github.com/bufbuild/protocompile"
+	"github.com/bufbuild/protocompile/reporter"
 	"github.com/spf13/pflag"
 	"google.golang.org/protobuf/proto"
 	dpb "google.golang.org/protobuf/types/descriptorpb"
@@ -137,52 +138,47 @@ func (c *cli) lint(rules lint.RuleRegistry, configs lint.Configs) error {
 	configs = append(configs, lint.Config{
 		DisabledRules: c.DisabledRules,
 	})
-	// Prepare proto import lookup.
-	fs, err := loadFileDescriptors(c.ProtoDescPath...)
+	// Prepare proto import lookup from descriptor sets.
+	_, err := loadFileDescriptors(c.ProtoDescPath...)
 	if err != nil {
 		return err
 	}
-	lookupImport := func(name string) (*desc.FileDescriptor, error) {
-		if f, found := fs[name]; found {
-			return f, nil
-		}
-		return nil, fmt.Errorf("%q is not found", name)
-	}
-	var errorsWithPos []protoparse.ErrorWithPos
-	var lock sync.Mutex
-	// Parse proto files into `protoreflect` file descriptors.
-	p := protoparse.Parser{
-		ImportPaths:           c.ProtoImportPaths,
-		IncludeSourceCodeInfo: true,
-		LookupImport:          lookupImport,
-		ErrorReporter: func(errorWithPos protoparse.ErrorWithPos) error {
-			// Protoparse isn't concurrent right now but just to be safe for the future.
-			lock.Lock()
-			errorsWithPos = append(errorsWithPos, errorWithPos)
-			lock.Unlock()
-			// Continue parsing. The error returned will be protoparse.ErrInvalidSource.
-			return nil
+
+	// Collect errors during compilation
+	var parseErrors []error
+	errReporter := reporter.NewReporter(
+		func(err reporter.ErrorWithPos) error {
+			parseErrors = append(parseErrors, err)
+			return nil // Continue parsing
 		},
+		nil, // No warning handler
+	)
+
+	// Parse proto files into protoreflect file descriptors.
+	// SourceResolver will use the import paths and the global registry for well-known types
+	compiler := &protocompile.Compiler{
+		Resolver:       &protocompile.SourceResolver{ImportPaths: c.ProtoImportPaths},
+		SourceInfoMode: protocompile.SourceInfoStandard,
+		Reporter:       errReporter,
 	}
-	// Resolve file absolute paths to relative ones.
-	protoFiles, err := protoparse.ResolveFilenames(c.ProtoImportPaths, c.ProtoFiles...)
+
+	ctx := context.Background()
+	fds, err := compiler.Compile(ctx, c.ProtoFiles...)
 	if err != nil {
-		return err
-	}
-	fd, err := p.ParseFiles(protoFiles...)
-	if err != nil {
-		if err == protoparse.ErrInvalidSource {
-			if len(errorsWithPos) == 0 {
-				return errors.New("got protoparse.ErrInvalidSource but no ErrorWithPos errors")
-			}
-			// TODO: There's multiple ways to deal with this but this prints all the errors at least
-			errStrings := make([]string, len(errorsWithPos))
-			for i, errorWithPos := range errorsWithPos {
-				errStrings[i] = errorWithPos.Error()
+		if len(parseErrors) > 0 {
+			errStrings := make([]string, len(parseErrors))
+			for i, parseErr := range parseErrors {
+				errStrings[i] = parseErr.Error()
 			}
 			return errors.New(strings.Join(errStrings, "\n"))
 		}
 		return err
+	}
+
+	// Wrap the file descriptors
+	fd := make([]*desc.FileDescriptor, len(fds))
+	for i, fileDesc := range fds {
+		fd[i] = desc.WrapFile(fileDesc)
 	}
 
 	// Create a linter to lint the file descriptors.

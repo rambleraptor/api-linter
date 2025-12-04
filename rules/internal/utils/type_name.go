@@ -18,7 +18,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 // GetTypeName returns the name of the type of the field, as a string,

@@ -20,7 +20,7 @@ import (
 	"github.com/aep-dev/api-linter/lint"
 	"github.com/aep-dev/api-linter/locations"
 	pluralize "github.com/gertd/go-pluralize"
-	"github.com/jhump/protoreflect/desc"
+	"github.com/aep-dev/api-linter/lint/desc"
 )
 
 var count = &lint.FieldRule{
